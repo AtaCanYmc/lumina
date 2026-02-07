@@ -9,21 +9,22 @@ def test_to_spiral_output_shape():
     
     result = to_spiral(img, lines=30, angle_step=0.1)
     
-    assert result.shape == img.shape
+    assert result.shape[:2] == img.shape
+    assert result.shape[2] == 4
     assert result.dtype == np.uint8
 
 
-def test_to_spiral_white_background():
-    """Test that the spiral has a white background."""
+def test_to_spiral_transparent_background():
+    """Test that the spiral has a transparent background."""
     img = np.ones((100, 100), dtype=np.uint8) * 128
     
     result = to_spiral(img, lines=30, angle_step=0.1)
     
-    # Corners should be white (255) since spiral doesn't reach them
-    assert result[0, 0] == 255
-    assert result[0, 99] == 255
-    assert result[99, 0] == 255
-    assert result[99, 99] == 255
+    # Corners should be transparent (0, 0, 0, 0) since spiral doesn't reach them
+    assert np.all(result[0, 0] == (0, 0, 0, 0))
+    assert np.all(result[0, 99] == (0, 0, 0, 0))
+    assert np.all(result[99, 0] == (0, 0, 0, 0))
+    assert np.all(result[99, 99] == (0, 0, 0, 0))
 
 
 def test_to_spiral_has_lines():
@@ -32,5 +33,5 @@ def test_to_spiral_has_lines():
     
     result = to_spiral(img, lines=30, angle_step=0.1)
     
-    # There should be some non-white pixels (the spiral lines)
-    assert np.any(result < 255)
+    # There should be some non-transparent pixels (the spiral lines)
+    assert np.any(result[:, :, 3] > 0)
