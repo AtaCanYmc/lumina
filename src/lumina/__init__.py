@@ -1,8 +1,9 @@
 from stl import mesh
+import numpy as np
 
 from src.lumina.core.image_service import read_image, normalize_image, enhance_contrast, resize_image
+from src.lumina.core.image_service import to_monochrome
 from src.lumina.core.stl_service import image_to_flat_stl
-
 
 def flat_lithophane(
         image_path: str,
@@ -65,3 +66,39 @@ def flat_lithophane(
     )
 
     return stl_mesh
+
+
+def generate_bitmap(
+        image_path: str,
+        width: int = 128,
+        height: int = 64,
+        threshold: int = 128,
+        enhance: bool = False
+) -> np.ndarray:
+    """Generates a bitmap from an image.
+
+    Args:
+        image_path (str): Path to the input image.
+        width (int, optional): Target width. Defaults to 128.
+        height (int, optional): Target height. Defaults to 64.
+        threshold (int, optional): Binarization threshold. Defaults to 128.
+        enhance (bool, optional): Enhance image. Defaults to False.
+
+    Returns:
+        np.ndarray: Generated bitmap.
+    """
+    img = read_image(image_path, is_grayscale=True)
+    img = normalize_image(img)
+
+    if enhance:
+        img = enhance_contrast(img)
+
+    img = resize_image(
+        img=img,
+        width=width,
+        height=height,
+        resolution=1
+    )
+
+    bitmap = to_monochrome(img, threshold)
+    return bitmap

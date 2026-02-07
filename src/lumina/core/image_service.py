@@ -1,9 +1,7 @@
 import os
-from typing import Any
 
 import cv2
 import numpy as np
-from numpy import ndarray
 
 from src.lumina.utils.common_utils import generate_uuid_filename
 
@@ -49,13 +47,25 @@ def read_image(path: str, is_grayscale: bool) -> np.ndarray:
     return img
 
 
-def crop_to_mask(image: np.ndarray, mask) -> tuple[ndarray[tuple[Any, ...], Any], Any]:
-    coords = np.argwhere(mask)
+def to_monochrome(image: np.ndarray, threshold: int = 128) -> np.ndarray:
+    """Converts a grayscale image to a 1-bit monochrome bitmap.
 
-    y0, x0 = coords.min(axis=0)
-    y1, x1 = coords.max(axis=0) + 1
+    Args:
+        image (np.ndarray): Grayscale input image (0-255).
+        threshold (int): Threshold value for binarization. Defaults to 128.
 
-    return image[y0:y1, x0:x1], mask[y0:y1, x0:x1]
+    Returns:
+        np.ndarray: Binary image (0 or 1) of type uint8.
+    """
+    if len(image.shape) > 2:
+        raise ValueError("Image must be grayscale (2D array).")
+
+    # Apply threshold: pixels > threshold become 1, else 0
+    # Note: For OLEDs, usually 1 is ON (light), 0 is OFF (dark).
+    # In standard image processing, 255 is white (light), 0 is black (dark).
+    # So: Pixel > Threshold -> White (1). Pixel <= Threshold -> Black (0).
+    binary = (image > threshold).astype(np.uint8)
+    return binary
 
 
 def normalize_image(image: np.ndarray) -> np.ndarray:
@@ -95,7 +105,7 @@ def resize_image(
     z_dim = img.shape[2] if len(img.shape) == 3 else 1
     new_shape = (target_w, target_h, z_dim) if z_dim > 1 \
         else (target_w, target_h)
-    img = cv2.resize(img, new_shape)
+    img = cv2.resize(img, new_shape, interpolation=cv2.INTER_AREA)
     return img
 
 
@@ -117,7 +127,7 @@ def scale_image(img: np.ndarray, width_mm: int = 100, resolution: int = 10) -> n
     scale = width_mm * resolution / x_dim
     new_shape = (int(y_dim * scale), int(x_dim * scale), z_dim) if z_dim > 1 \
         else (int(y_dim * scale), int(x_dim * scale))
-    img = cv2.resize(img, new_shape)
+    img = cv2.resize(img, new_shape, interpolation=cv2.INTER_AREA)
     return img
 
 

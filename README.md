@@ -14,7 +14,9 @@
     - `Heart` (Heart-shaped)
 - **Smart Framing**: Automatically adds a smooth, shape-conforming frame around your lithophane.
 - **True Mesh Cutting**: Physically cuts the mesh to the desired shape, eliminating unwanted artifacts.
+- **Bitmap Generator**: Create low-res monochrome bitmaps (C-array/Hex) for embedded displays (OLED, LCD).
 - **Dual Interface**: Use it via the command line (CLI) or as a Python library.
+
 - **Customizable**: Control thickness, dimensions, frame size, and resolution.
 
 ## 📦 Installation
@@ -47,6 +49,13 @@ Generate a circular lithophane with a frame:
 
 ```bash
 python -m lumina.cli flat my_image.jpg --shape circle --width 120 --frame-thick 5
+```
+
+### Bitmap Generation
+Generate a C-array for an OLED display:
+
+```bash
+python -m lumina.cli bitmap icon.png --width 128 --height 64
 ```
 
 For more details on CLI commands, see [CLI Documentation](docs/CLI.md).

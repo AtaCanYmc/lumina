@@ -1,6 +1,7 @@
 import click
 import os
-from lumina import flat_lithophane
+from lumina import flat_lithophane, generate_bitmap
+from lumina.core.bitmap_service import export_to_c_array, export_to_hex
 
 @click.group()
 def cli():
@@ -57,5 +58,30 @@ def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, f
         click.echo(f"Error: {e}", err=True)
 
 
+@cli.command()
+@click.argument('input_path', type=click.Path(exists=True))
+@click.option('--width', default=128, help='Target width.')
+@click.option('--height', default=64, help='Target height.')
+@click.option('--threshold', default=128, help='Binarization threshold (0-255).')
+@click.option('--output-format', type=click.Choice(['hex', 'c_array']), default='c_array', help='Output format.')
+def bitmap(input_path, width, height, threshold, output_format):
+    """Generates a monochrome bitmap for embedded displays."""
+    try:
+        bitmap = generate_bitmap(input_path, width, height, threshold)
+        
+        if output_format == 'c_array':
+            # Use filename as variable name sanitized
+            base = os.path.splitext(os.path.basename(input_path))[0]
+            var_name = "".join(x for x in base if x.isalnum() or x == "_")
+            result = export_to_c_array(bitmap, var_name)
+        else:
+            result = export_to_hex(bitmap)
+            
+        click.echo(f"Bitmap generated: {result}")
+        
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+
 if __name__ == '__main__':
     cli()
+
