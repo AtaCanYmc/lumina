@@ -1,10 +1,8 @@
 import numpy as np
-import pytest
 from lumina.core.stl_service import (
     shape_mask,
     apply_shape_to_heightmap,
-    image_to_flat_stl,
-    jpg_to_stl
+    image_to_flat_stl
 )
 
 def test_shape_mask_circle():
@@ -12,21 +10,21 @@ def test_shape_mask_circle():
     mask = shape_mask(height, width, "circle")
     assert mask.shape == (height, width)
     # Center should be True
-    assert mask[50, 50] == True
+    assert mask[50, 50]
     # Corners should be False
-    assert mask[0, 0] == False
-    assert mask[0, 99] == False
-    assert mask[99, 0] == False
-    assert mask[99, 99] == False
+    assert not mask[0, 0]
+    assert not mask[0, 99]
+    assert not mask[99, 0]
+    assert not mask[99, 99]
 
 def test_shape_mask_heart():
     height, width = 100, 100
     mask = shape_mask(height, width, "heart")
     assert mask.shape == (height, width)
     # Center somewhat should be True (heart shape varies but usually covers center)
-    assert mask[50, 50] == True
+    assert mask[50, 50]
     # Corners should be False
-    assert mask[0, 0] == False
+    assert not mask[0, 0]
 
 def test_apply_shape_to_heightmap():
     heightmap = np.ones((100, 100)) * 10.0

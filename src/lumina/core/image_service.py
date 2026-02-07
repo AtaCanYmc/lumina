@@ -1,5 +1,4 @@
 import os
-import string
 from typing import Any
 
 import cv2

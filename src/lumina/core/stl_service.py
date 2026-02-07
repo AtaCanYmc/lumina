@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from stl import mesh, Mesh
+from .shapes import ShapeFactory
 
 
 def add_frame_to_z(z, frame_mm, resolution: float = 5, extra_height_mm: float = 0) -> np.ndarray:
@@ -79,213 +80,6 @@ def jpg_to_stl(
     x, y = np.meshgrid(x1, y1)
     x = np.fliplr(x)
     return x, y, z
-
-
-# ... (ShapeStrategy classes and shape_mask function remain unchanged) ...
-
-
-def image_to_flat_stl(
-        image: np.ndarray,
-        max_th: float,
-        min_th: float,
-        frame_thick_mm: float,
-        frame_height_mm: float = 0.0,
-        resolution: int = 5,
-        shape: str = "rect"
-) -> Mesh:
-    """Converts an image to an STL file path.
-
-    Supported shapes:
-        rect
-        circle
-        heart
-
-    Args:
-        image (np.ndarray): Input image
-        max_th (float): Maximum thickness in mm
-        min_th (float): Minimum thickness in mm
-        frame_thick_mm (float): Frame size in mm
-        frame_height_mm (float): Frame height in mm
-        resolution (int): Image resolution in pixels per mm
-        shape (str): Image shape
-
-    Returns:
-        Mesh
-    """
-    # 1. Generate base Z matrix (with rectangular frame padding if frame_thick > 0)
-    x, y, z = jpg_to_stl(
-        image=image,
-        frame_thick_mm=frame_thick_mm,
-        max_thick=max_th,
-        min_thick=min_th,
-        resolution=resolution,
-        frame_height_mm=frame_height_mm
-    )
-
-    # 2. Determine inner image ROI
-    # jpg_to_stl adds frame padding, then a 1px backplane border.
-    # Total padding on each side = frame_pxl + 1
-    
-    frame_pxl = int(frame_thick_mm * resolution)
-    total_pad = frame_pxl + 1
-    
-    # Calculate dimensions of the actual image area
-    h, w = z.shape
-    img_h = h - 2 * total_pad
-    img_w = w - 2 * total_pad
-    
-    # Defensive check
-    if img_h <= 0 or img_w <= 0:
-        # Should not happen given valid inputs, but if frame is huge...
-        # Fallback to full mask
-        mask = np.ones(z.shape, dtype=bool)
-    else:
-        # 3. Create Shape Mask for the active image area
-        strategy = ShapeFactory.get_strategy(shape)
-        inner_mask = strategy.create_mask(img_h, img_w)
-        
-        # 4. Create Full Mask
-        # By default, everything is masked OUT (False)
-        full_mask_uint8 = np.zeros(z.shape, dtype=np.uint8)
-        
-        # Place the inner mask in the center
-        # y_start = total_pad
-        # x_start = total_pad
-        # But wait, jpg_to_stl flips things? 
-        # jpg_to_stl: x = np.fliplr(x). Z is from flipped image.
-        # But the mask generation uses standard grid. 
-        # Assuming centered shape, it should be fine.
-        
-        full_mask_uint8[total_pad:total_pad+img_h, total_pad:total_pad+img_w] = inner_mask.astype(np.uint8)
-        
-        if shape == "rect":
-            # For Rect, we usually usually want the whole thing including the rectangular frame.
-            # If we just leave it as inner_mask, the frame is cut off!
-            # So for Rect, we want the mask to be True whereever there is valid Z?
-            # Or just all True?
-            # Let's say all True to keep default behavior which includes the frame.
-            mask = np.ones(z.shape, dtype=bool)
-        else:
-            # For Shapes (Circle/Heart):
-            # We want the Frame to follow the shape.
-            
-            if frame_thick_mm > 0:
-                # Dilate the inner shape to create the frame
-                # Kernel size: radius = frame_pxl. Diameter ~ 2*frame_pxl.
-                # Use slightly larger to ensure coverage?
-                # frame_pxl corresponds to the added padding thickness.
-                # So we need to expand the mask by frame_pxl pixels.
-                
-                k_size = 2 * frame_pxl + 1
-                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k_size, k_size))
-                
-                # Dilate
-                outer_mask = cv2.dilate(full_mask_uint8, kernel)
-                
-                # The final mask includes both inner shape and the dilated frame
-                mask = outer_mask.astype(bool)
-                
-                # The area between inner_mask and outer_mask is the "Frame".
-                # Crucial Fix: The Z values there currently come from jpg_to_stl.
-                # In the corners of the image (which are covered by the shaped frame but were "background" in the original image),
-                # the Z values are low (image depth), not high (frame depth).
-                # We must force them to frame_height.
-                
-                inner_placed_mask = full_mask_uint8.astype(bool)
-                frame_region = mask & (~inner_placed_mask)
-                
-                frame_height = np.max(z) + frame_height_mm
-                z[frame_region] = frame_height
-
-
-                
-            else:
-                # No frame
-                mask = full_mask_uint8.astype(bool)
-
-
-    stl = create_solid_lithophane(x, y, z, mask=mask)
-    return stl
-
-    """Adds a frame around the z matrix.
-
-    Args:x
-        z (np.ndarray): Z matrix
-        frame_mm (float): Frame size in mm
-        resolution (int, optional): Image resolution in pixels per mm. Defaults to 5.
-        extra_height_mm (int, optional): Extra height to add to frame. Defaults to 0.
-
-    Returns:
-        np.ndarray: Z matrix with frame
-    """
-    if frame_mm <= 0:
-        return z
-
-    frame_pxl = int(frame_mm * resolution)
-    frame_height = np.max(z) + extra_height_mm
-    new_shape = (z.shape[0] + 2 * frame_pxl, z.shape[1] + 2 * frame_pxl)
-    z_framed = np.full(new_shape, frame_height)
-    z_framed[frame_pxl:-frame_pxl, frame_pxl:-frame_pxl] = z
-    return z_framed
-
-
-def jpg_to_stl(
-        image: np.ndarray,
-        max_thick: float = 3.0,
-        min_thick: float = 0.5,
-        frame_thick_mm: float = 0.5,
-        frame_height_mm: float = 0.0,
-        resolution: int = 5,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Function to convert filename to stl with given width.
-
-    Args:
-        image (np.ndarray): Path to image file
-        max_thick (float, optional): Maximum thickness in mm. Defaults to 3.0.
-        min_thick (float, optional): Minimum thickness in mm. Defaults to 0.5.
-        frame_thick_mm (float, optional): Frame around image in mm. Defaults to 0.5.
-        frame_height_mm (float, optional): Frame height in mm. Defaults to 0.0.
-        resolution (int, optional): Image resolution in pixels per mm. Defaults to 10.
-
-    Returns:
-        tuple[np.ndarray, np.ndarray, np.ndarray]: x, y, z matrices
-    """
-
-    if len(image.shape) > 2:
-        raise RuntimeError(f"Image shape {image.shape} is not supported. "
-                           f"Only grayscale images are supported.")
-
-    if resolution <= 0:
-        raise ValueError("Resolution must be a positive integer.")
-
-    if min_thick >= max_thick:
-        raise ValueError("min_thick must be less than max_thick.")
-
-    # Flip image vertically
-    image = np.flipud(image)
-
-    # Invert threshold for z matrix
-    image = 1 - np.double(image)
-
-    # Scale z matrix to desired max depth and add base height
-    depth_mm = max_thick - min_thick
-    offset_mm = min_thick
-    z = image * depth_mm + offset_mm
-
-    # Add a thin back plane
-    z_with_back = np.zeros([z.shape[0] + 2, z.shape[1] + 2])
-    z_with_back[1:-1, 1:-1] = z
-    z = z_with_back
-
-    x1 = np.linspace(0, z.shape[1] / resolution, z.shape[1])
-    y1 = np.linspace(0, z.shape[0] / resolution, z.shape[0])
-    x, y = np.meshgrid(x1, y1)
-    x = np.fliplr(x)
-    return x, y, z
-
-
-from abc import ABC, abstractmethod
-from .shapes import ShapeFactory, ShapeStrategy
 
 
 def shape_mask(height, width, shape="circle"):
@@ -493,7 +287,6 @@ def image_to_flat_stl(
     return stl
 
 
-
 def apply_shape_to_heightmap(heightmap, shape="circle", min_thickness=0.8):
     h, w = heightmap.shape
     # Use Factory/Strategy to get mask
@@ -504,4 +297,3 @@ def apply_shape_to_heightmap(heightmap, shape="circle", min_thickness=0.8):
     shaped[~mask] = min_thickness
 
     return shaped, mask
-
