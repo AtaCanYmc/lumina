@@ -1,4 +1,5 @@
 import os
+import math
 
 import cv2
 import numpy as np
@@ -242,7 +243,8 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
     while True:
         # r = (theta / 2pi) * (max_r / count of lines)
         r = (theta / (2 * math.pi)) * (max_r / lines)
-        if r >= max_r: break
+        if r >= max_r: 
+            break
 
         x = int(center[0] + r * math.cos(theta))
         y = int(center[1] + r * math.sin(theta))

@@ -15,6 +15,7 @@
 - **Smart Framing**: Automatically adds a smooth, shape-conforming frame around your lithophane.
 - **True Mesh Cutting**: Physically cuts the mesh to the desired shape, eliminating unwanted artifacts.
 - **Bitmap Generator**: Create low-res monochrome bitmaps (C-array/Hex) for embedded displays (OLED, LCD).
+- **Spiral Betty Art**: Generate spiral art images from photos for laser engraving or CNC projects.
 - **Dual Interface**: Use it via the command line (CLI) or as a Python library.
 
 - **Customizable**: Control thickness, dimensions, frame size, and resolution.

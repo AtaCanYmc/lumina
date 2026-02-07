@@ -2,7 +2,7 @@ from stl import mesh
 import numpy as np
 
 from src.lumina.core.image_service import read_image, normalize_image, enhance_contrast, resize_image
-from src.lumina.core.image_service import to_monochrome
+from src.lumina.core.image_service import to_monochrome, to_spiral
 from src.lumina.core.stl_service import image_to_flat_stl
 
 def flat_lithophane(
@@ -102,3 +102,35 @@ def generate_bitmap(
 
     bitmap = to_monochrome(img, threshold)
     return bitmap
+
+
+def generate_spiral_betty_png(
+        image_path: str,
+        radius_mm: float = 100.0,
+        resolution: int = 5,
+        enhance: bool = False
+) -> np.ndarray:
+    """Generates a spiral betty from an image.
+
+    Args:
+        image_path (str): Path to the input image.
+        radius_mm (float, optional): Target radius in mm. Defaults to 100.0.
+        resolution (int, optional): Image resolution in pixels per mm. Defaults to 5.
+        enhance (bool, optional): Enhance image. Defaults to False.
+
+    Returns:
+        np.ndarray: Generated spiral betty.
+    """
+    img = read_image(image_path, is_grayscale=True)
+    img = normalize_image(img)
+    if enhance:
+        img = enhance_contrast(img)
+    img = resize_image(
+        img=img,
+        width=radius_mm * 2,
+        height=radius_mm * 2,
+        resolution=resolution
+    )
+    return to_spiral(img)
+
+    

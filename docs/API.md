@@ -105,3 +105,45 @@ c_code = export_to_c_array(bitmap, var_name="logo_data")
 print(c_code)
 ```
 
+---
+
+## `lumina.generate_spiral_betty_png`
+
+Generates a spiral betty (spiral art) image from an input image.
+
+```python
+from lumina import generate_spiral_betty_png
+
+def generate_spiral_betty_png(
+    image_path: str,
+    radius_mm: float = 100.0,
+    resolution: int = 5,
+    enhance: bool = False
+) -> np.ndarray:
+```
+
+### Parameters
+
+- **`image_path`** (`str`): Path to the input image file.
+- **`radius_mm`** (`float`, default `100.0`): Target radius in mm.
+- **`resolution`** (`int`, default `5`): Resolution in pixels per mm.
+- **`enhance`** (`bool`, default `False`): Apply contrast enhancement before processing.
+
+### Returns
+
+- **`np.ndarray`**: A grayscale image with the spiral art pattern.
+
+### Example
+
+```python
+from lumina import generate_spiral_betty_png
+import cv2
+
+# Generate a spiral betty
+spiral = generate_spiral_betty_png("path/to/portrait.jpg", radius_mm=50)
+
+# Save the result
+cv2.imwrite("spiral_output.png", spiral)
+```
+
+
