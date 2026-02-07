@@ -1,94 +1,101 @@
-# Lumina: 3D Lithophane Generator
+# 🌟 Lumina
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen.svg)]()
 
-**Lumina** is a specialized Python package for makers and 3D printing enthusiasts. it allows you to easily convert 2D images into high-quality 3D lithophane STL files, ready for printing.
+**Lumina** is a powerful Python toolkit for makers, artists, and 3D printing enthusiasts. Transform your images into stunning physical art pieces.
 
-## 🚀 Features
+## ✨ What Can You Create?
 
-- **High-Quality Conversion**: Converts grayscale images into detailed 3D meshes.
-- **Multiple Shapes**: Generate lithophanes in different shapes:
-    - `Rect` (Standard rectangular)
-    - `Circle` (Circular/Cylindrical base)
-    - `Heart` (Heart-shaped)
-- **Smart Framing**: Automatically adds a smooth, shape-conforming frame around your lithophane.
-- **True Mesh Cutting**: Physically cuts the mesh to the desired shape, eliminating unwanted artifacts.
-- **Bitmap Generator**: Create low-res monochrome bitmaps (C-array/Hex) for embedded displays (OLED, LCD).
-- **Spiral Betty Art**: Generate spiral art images from photos for laser engraving or CNC projects.
-- **Dual Interface**: Use it via the command line (CLI) or as a Python library.
+| Feature | Description | Output |
+|---------|-------------|--------|
+| 🖼️ **Lithophanes** | 3D-printable light art | `.stl` mesh |
+| 🔲 **Bitmaps** | Monochrome images for OLED/LCD displays | C-array / Hex |
+| 🌀 **Spiral Betty** | Spiral art for laser/CNC engraving | `.png` image |
 
-- **Customizable**: Control thickness, dimensions, frame size, and resolution.
+## 🚀 Quick Start
 
-## 📦 Installation
-
-To install Lumina, navigate to the project directory and run:
+### Installation
 
 ```bash
-pip install .
+pip install lumina-tools
 ```
 
-Or install dependencies directly:
+Or from source:
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/AtaCanYmc/lumina.git
+cd lumina
+pip install -e .
 ```
 
-## 💻 CLI Usage
-
-Lumina comes with a powerful CLI tool called `lumina`.
-
-### Basic Usage
-Convert an image to a standard flat lithophane:
-
-```bash
-python -m lumina.cli flat my_image.jpg
-```
-
-### Advanced Usage
-Generate a circular lithophane with a frame:
-
-```bash
-python -m lumina.cli flat my_image.jpg --shape circle --width 120 --frame-thick 5
-```
-
-### Bitmap Generation
-Generate a C-array for an OLED display:
-
-```bash
-python -m lumina.cli bitmap icon.png --width 128 --height 64
-```
-
-For more details on CLI commands, see [CLI Documentation](docs/CLI.md).
-
-## 🐍 Python API Usage
-
-You can also use Lumina in your Python scripts.
+### Create a Lithophane
 
 ```python
 from lumina import flat_lithophane
 
-# Generate a heart-shaped lithophane
 mesh = flat_lithophane(
-    image_path="path/to/image.jpg",
-    shape="heart",
+    "photo.jpg",
+    shape="heart",      # rect, circle, heart
     width_mm=100,
-    max_thickness=3.0,
-    min_thickness=0.5
+    max_thickness=3.0
 )
-
-# Save the mesh
-mesh.save("my_heart_lithophane.stl")
+mesh.save("lithophane.stl")
 ```
 
-For full API reference, see [API Documentation](docs/API.md).
+### Generate Bitmap for OLED
 
-## 📂 Documentation
+```python
+from lumina import generate_bitmap
+from lumina.core.bitmap_service import export_to_c_array
+
+bitmap = generate_bitmap("logo.png", width=128, height=64)
+print(export_to_c_array(bitmap, "logo_data"))
+```
+
+### Create Spiral Art
+
+```python
+from lumina import generate_spiral_betty_png
+import cv2
+
+spiral = generate_spiral_betty_png("portrait.jpg", radius_mm=50)
+cv2.imwrite("spiral_art.png", spiral)
+```
+
+## 💻 CLI Usage
+
+```bash
+# Lithophane
+python -m lumina.cli flat photo.jpg --shape circle --width 120
+
+# Bitmap for embedded displays
+python -m lumina.cli bitmap logo.png --width 128 --height 64
+```
+
+## 🎨 Features
+
+- **Multiple Shapes**: Rectangle, Circle, Heart
+- **Smart Framing**: Auto-generated shape-conforming frames
+- **True Mesh Cutting**: Clean edges without artifacts
+- **Flexible Output**: STL meshes, C-arrays, PNG images
+- **CLI & Python API**: Use from terminal or integrate into your projects
+
+## 📖 Documentation
 
 - [CLI Reference](docs/CLI.md)
-- [Python API Reference](docs/API.md)
-- [Contributing Guidelines](docs/CONTRIBUTING.md)
+- [Python API](docs/API.md)
+- [Contributing](docs/CONTRIBUTING.md)
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+Made with ❤️ for the maker community

@@ -21,7 +21,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Multimedia :: Graphics :: 3D Modeling",
 ]
-keywords = ["lithophane", "3d-printing", "stl", "maker", "gift"]
+keywords = ["lithophane", "3d-printing", "spiral-betty", "bitmap", "stl", "maker", "gift"]
 dependencies = [
     "numpy>=1.20.0",
     "opencv-python>=4.5.0",
@@ -30,8 +30,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/atacanyaymaci/lumina"
-"Bug Tracker" = "https://github.com/atacanyaymaci/lumina/issues"
+"Homepage" = "https://github.com/AtaCanYmc/lumina"
+"Bug Tracker" = "https://github.com/AtaCanYmc/lumina/issues"
 
 [project.scripts]
 lumina = "lumina.cli:main"
