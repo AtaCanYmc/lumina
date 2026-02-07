@@ -70,18 +70,20 @@ def to_monochrome(image: np.ndarray, threshold: int = 128) -> np.ndarray:
 
 
 def normalize_image(image: np.ndarray) -> np.ndarray:
-    """ Normalizes the image
+    """ Normalize image to 0-1 range using min-max scaling.
         Args:
             image (np.ndarray): Image
 
         Returns:
             np.ndarray: Normalized image
     """
+    min_val = np.min(image)
     max_val = np.max(image)
-    if max_val == 0:
-        raise ValueError("Image is completely black or invalid.")
-    return image / max_val
 
+    if max_val == min_val:
+        raise ValueError("Image has no contrast.")
+
+    return (image - min_val) / (max_val - min_val)
 
 def invert_image(image: np.ndarray) -> np.ndarray:
     """Inverts the image.
@@ -151,8 +153,27 @@ def enhance_contrast(img: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: Contrast-enhanced image.
     """
+    # 1. Grayscale force
+    if len(img.shape) == 3:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # 2. Normalize to uint8
+    if img.dtype != np.uint8:
+        min_val = np.min(img)
+        max_val = np.max(img)
+
+        if max_val == min_val:
+            raise ValueError("Image has no contrast.")
+
+        img = (img - min_val) / (max_val - min_val)
+        img = (img * 255).astype(np.uint8)
+
+    # 3. CLAHE uygula
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    return clahe.apply(img)
+    img = clahe.apply(img)
+
+    # 4. tekrar float 0–1 aralığına al
+    return img.astype(np.float32) / 255.0
 
 
 def rotate_image(img: np.ndarray, angle: float) -> np.ndarray:

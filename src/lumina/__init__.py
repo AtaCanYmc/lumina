@@ -108,7 +108,8 @@ def generate_spiral_betty_png(
         image_path: str,
         radius_mm: float = 100.0,
         resolution: int = 5,
-        enhance: bool = False
+        lines: int = 30,
+        angle_step: float = 0.05
 ) -> np.ndarray:
     """Generates a spiral betty from an image.
 
@@ -116,21 +117,19 @@ def generate_spiral_betty_png(
         image_path (str): Path to the input image.
         radius_mm (float, optional): Target radius in mm. Defaults to 100.0.
         resolution (int, optional): Image resolution in pixels per mm. Defaults to 5.
-        enhance (bool, optional): Enhance image. Defaults to False.
+        lines (int, optional): Number of lines. Defaults to 30.
+        angle_step (float, optional): Angle step. Defaults to 0.05.
 
     Returns:
         np.ndarray: Generated spiral betty.
     """
     img = read_image(image_path, is_grayscale=True)
-    img = normalize_image(img)
-    if enhance:
-        img = enhance_contrast(img)
     img = resize_image(
         img=img,
         width=radius_mm * 2,
         height=radius_mm * 2,
         resolution=resolution
     )
-    return to_spiral(img)
+    return to_spiral(img, lines=lines, angle_step=angle_step)
 
     
