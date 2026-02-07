@@ -130,8 +130,60 @@ def test_image_to_flat_stl_frame_generation():
     z_values = mesh_frame_high.points[:, [2, 5, 8]].flatten()
     max_z = np.max(z_values)
     
+    z_values = mesh_frame_high.points[:, [2, 5, 8]].flatten()
+    max_z = np.max(z_values)
+    
     # Max Z should be approx 3.0 + 2.0 = 5.0
     assert max_z > 4.9, f"Expected max Z to be around 5.0, got {max_z}"
+
+def test_image_to_flat_stl_frame_height_on_white_image():
+    """
+    Verify that the shaped frame has high Z even if the underlying image is low (white).
+    This reproduces the bug where frame overlaps with image corners.
+    """
+    # White image -> Low Z (min_thick).
+    # IMPORTANT: jpg_to_stl expects normalized image (0..1).
+    image = np.ones((100, 100), dtype=np.float64)
+    
+    # Circle shape, Frame thick 5mm
+    # min_th=0.5. Frame should be HIGH (max_th + extra? or just max_th?)
+    # usually frame height is max_z (from image) + extra. Note: jpg_to_stl logic.
+    # If image is white, max_z of image is 0.5. 
+    # But jpg_to_stl might frame it at 0.5? 
+    # Let's check jpg_to_stl: frame_height = np.max(z) + extra_height_mm.
+    # If image is all 0.5, then frame is 0.5.
+    # That's not good for a frame usually? Frame is usually "thickest part".
+    # Wait, jpg_to_stl takes 'max_thick' processing argument but Z depends on Image.
+    # If image is faint, Z is low.
+    
+    # But usually a frame is meant to stand out? 
+    # Or at least be at the "Frame Height" level.
+    # Let's explicitly ask for extra height.
+    
+    extra_h = 2.0
+    mesh_obj = image_to_flat_stl(
+        image=image, 
+        max_th=3.0, min_th=0.5, 
+        frame_thick_mm=5, frame_height_mm=extra_h, 
+        resolution=1, shape="circle"
+    )
+    
+    # The frame should be at least at Z = (image_max_z + extra_h).
+    # Since image is flat 0.5, frame should be 2.5.
+    
+    # We inspect points.
+    zs = mesh_obj.points[:, [2, 5, 8]].flatten()
+    
+    # The frame part should have Z ~ 2.5.
+    # The image part (center) should have Z ~ 0.5.
+    
+    # If the bug exists, the "corners" (which are Frame now) will be Z ~ 0.5 (image level)
+    # instead of Z ~ 2.5 (frame level).
+    
+    max_z = np.max(zs)
+    
+    assert max_z > 2.4, f"Frame should be high (approx 2.5), but max Z is {max_z}"
+
 
 
 

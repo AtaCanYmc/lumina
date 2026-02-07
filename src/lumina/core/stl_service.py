@@ -69,14 +69,6 @@ def jpg_to_stl(
     offset_mm = min_thick
     z = image * depth_mm + offset_mm
 
-    # Add a frame around the image
-    z = add_frame_to_z(
-        z=z,
-        frame_mm=frame_thick_mm,
-        resolution=resolution,
-        extra_height_mm=frame_height_mm
-    )
-
     # Add a thin back plane
     z_with_back = np.zeros([z.shape[0] + 2, z.shape[1] + 2])
     z_with_back[1:-1, 1:-1] = z
@@ -193,39 +185,24 @@ def image_to_flat_stl(
                 # The final mask includes both inner shape and the dilated frame
                 mask = outer_mask.astype(bool)
                 
-                # Note: The area between inner_mask and outer_mask is the "Frame".
-                # The Z values there come from jpg_to_stl, which sets them to frame_height.
-                # Because jpg_to_stl creates a rectangular block of frame_height, 
-                # and our dilation is within that block (mostly), 
-                # the frame will have the correct height.
-                # Corner areas of the rect frame that are NOT covered by dilation will be masked out.
+                # The area between inner_mask and outer_mask is the "Frame".
+                # Crucial Fix: The Z values there currently come from jpg_to_stl.
+                # In the corners of the image (which are covered by the shaped frame but were "background" in the original image),
+                # the Z values are low (image depth), not high (frame depth).
+                # We must force them to frame_height.
+                
+                inner_placed_mask = full_mask_uint8.astype(bool)
+                frame_region = mask & (~inner_placed_mask)
+                
+                frame_height = np.max(z) + frame_height_mm
+                z[frame_region] = frame_height
+
+
+                
             else:
                 # No frame
                 mask = full_mask_uint8.astype(bool)
-                
-            # Apply shape mask to heightmap? 
-            # We assume jpg_to_stl returns 'z' which works. 
-            # But the inner part of 'z' might need strictly min_thickness for masked-out areas?
-            # actually our mask handles the cutting.
-            # But `apply_shape_to_heightmap` (previous step) was used to ensure
-            # visual correctness in the heightmap itself if we weren't cutting.
-            # Do we still need to modify Z values inside the ROI?
-            # Previous logic:
-            # z, _ = apply_shape_to_heightmap(z, shape=shape, min_thickness=min_th)
-            # This applies to the WHOLE z. But z includes frame padding.
-            # If we apply shape mask to the whole Z, it treats the whole Z (frame included) as the shape domain.
-            # That's wrong if we want shape *inside* frame.
-            
-            # The previous approach (Step 1-3 of this task) was applying shape to the result of jpg_to_stl.
-            # Start: Z includes frame.
-            # Shape Mask: Applied to HxW.
-            # Result: Circle cutout of the Frame+Image.
-            # That's why the user saw "white plate" (if we didn't cut) or "rectangular frame pieces" (if we partially cut).
-            
-            # NOW: We construct the mask based on Image Only, then Frame follows it.
-            # So we DON'T need `apply_shape_to_heightmap` on the global Z anymore!
-            # The `mask` we just built handles everything.
-            pass
+
 
     stl = create_solid_lithophane(x, y, z, mask=mask)
     return stl
@@ -294,14 +271,6 @@ def jpg_to_stl(
     depth_mm = max_thick - min_thick
     offset_mm = min_thick
     z = image * depth_mm + offset_mm
-
-    # Add a frame around the image
-    z = add_frame_to_z(
-        z=z,
-        frame_mm=frame_thick_mm,
-        resolution=resolution,
-        extra_height_mm=frame_height_mm
-    )
 
     # Add a thin back plane
     z_with_back = np.zeros([z.shape[0] + 2, z.shape[1] + 2])
@@ -488,20 +457,90 @@ def image_to_flat_stl(
     Returns:
         Mesh
     """
-    x, y, z = jpg_to_stl(
+    # 1. Generate base Z matrix (tight, only backplane border)
+    # Note: jpg_to_stl no longer adds the frame.
+    _, _, z = jpg_to_stl(
         image=image,
-        frame_thick_mm=frame_thick_mm,
+        frame_thick_mm=0, # Force 0 here, we add it manually
         max_thick=max_th,
         min_thick=min_th,
         resolution=resolution,
-        frame_height_mm=frame_height_mm
+        frame_height_mm=0
     )
 
-    # Apply shape mask
-    z, mask = apply_shape_to_heightmap(z, shape=shape, min_thickness=min_th)
+    # 2. Add Frame Padding (Physical Space)
+    # We add the frame space to Z. This creates a high-Z border around the image.
+    # For Rect shape, this is the final frame.
+    # For Shapes, this provides the canvas for the shaped frame, and the corners will be cut.
+    z = add_frame_to_z(
+        z=z,
+        frame_mm=frame_thick_mm,
+        resolution=resolution,
+        extra_height_mm=frame_height_mm
+    )
+
+    # 3. Regenerate X, Y grids (since Z shape changed)
+    x1 = np.linspace(0, z.shape[1] / resolution, z.shape[1])
+    y1 = np.linspace(0, z.shape[0] / resolution, z.shape[0])
+    x, y = np.meshgrid(x1, y1)
+    x = np.fliplr(x)
+
+    # 4. Generate Mask and Fix Z-Levels
+    
+    # Calculate dimensions of the inner content (Image + Backplane)
+    # The frame padding was added to all sides.
+    frame_pxl = int(frame_thick_mm * resolution)
+    
+    # Total Z shape is (H_img + 2 + 2*frame_pxl, W_img + 2 + 2*frame_pxl)
+    # The "Content" (Image+Backplane) is in the middle.
+    h_total, w_total = z.shape
+    h_inner = h_total - 2 * frame_pxl
+    w_inner = w_total - 2 * frame_pxl
+
+    if shape == "rect":
+        # Rect: Valid everywhere.
+        mask = np.ones(z.shape, dtype=bool)
+    else:
+        # Shapes: We need to mask the content and dilate for frame.
+        
+        # Inner Mask: covers the Content area.
+        # Note: The content itself has a 1px backplane border from jpg_to_stl.
+        # We usually want the shape to apply to the IMAGE, essentially cutting the backplane corners too.
+        # If we use h_inner, w_inner, we are masking the "Image + Backplane".
+        strategy = ShapeFactory.get_strategy(shape)
+        # Create mask for the inner content
+        inner_content_mask = strategy.create_mask(h_inner, w_inner)
+        
+        # Place inner mask into full-size array
+        full_mask_uint8 = np.zeros(z.shape, dtype=np.uint8)
+        full_mask_uint8[frame_pxl:frame_pxl+h_inner, frame_pxl:frame_pxl+w_inner] = inner_content_mask.astype(np.uint8)
+        
+        # Dilate to create Frame
+        if frame_thick_mm > 0:
+            k_size = 2 * frame_pxl + 1
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k_size, k_size))
+            outer_mask = cv2.dilate(full_mask_uint8, kernel)
+            mask = outer_mask.astype(bool)
+            
+            # Fix Z-levels for the actual shaped frame
+            # The frame is the region between the inner mask and the outer mask.
+            inner_placed_mask = full_mask_uint8.astype(bool)
+            frame_region = mask & (~inner_placed_mask)
+            
+            # Force Z to frame_height in the frame region.
+            # This handles the case where the shaped frame overlaps the low-Z image corners.
+            # Calculate desired frame height: Max Z (which includes the high border from add_frame_to_z)
+            # strictly speaking, add_frame_to_z set the border to (max(image) + extra).
+            # So np.max(z) is correct.
+            frame_height = np.max(z) 
+            z[frame_region] = frame_height
+            
+        else:
+            mask = full_mask_uint8.astype(bool)
 
     stl = create_solid_lithophane(x, y, z, mask=mask)
     return stl
+
 
 
 def apply_shape_to_heightmap(heightmap, shape="circle", min_thickness=0.8):
