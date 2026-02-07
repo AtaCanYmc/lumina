@@ -1,21 +1,60 @@
 import click
-
+import os
+from lumina import flat_lithophane
 
 @click.group()
 def cli():
-    """Lumina: 14 Şubat Maker Paketi"""
+    """Lumina: generating lithophane STLs.
+    
+    A CLI tool for generating lithophane STLs from images.
+    """
     pass
 
 
 @cli.command()
-@click.option('--input', required=True, help='Görsel yolu')
-@click.option('--mode', type=click.Choice(['flat', 'curved']), default='flat')
-@click.option('--radius', type=float, default=50.0, help='Bükme yarıçapı (mm)')
-def flat_lithophane(path, mode, radius):
-    """Resmi 3D STL dosyasına dönüştürür."""
-    click.echo(f"Processing {path}...")
-    # Burada senin yazdığın image_to_flat_stl veya curved_stl çağrılacak.
-    click.echo("Success! STL generated in temp folder.")
+@click.argument('input_path', type=click.Path(exists=True))
+@click.option('--output', '-o', default=None, help='Output STL file path. Defaults to input filename with .stl extension.')
+@click.option('--width', '-w', default=100.0, help='Width of the lithophane in mm.')
+@click.option('--height', '-h', default=150.0, help='Height of the lithophane in mm.')
+@click.option('--max-thick', default=3.0, help='Maximum thickness (for dark areas) in mm.')
+@click.option('--min-thick', default=0.5, help='Minimum thickness (for light areas) in mm.')
+@click.option('--frame-thick', default=1.0, help='Thickness of the frame border in mm.')
+@click.option('--frame-height', default=2.0, help='Height of the frame border in mm (0 to auto-match max height).')
+@click.option('--resolution', '-r', default=5, help='Resolution in pixels per mm.')
+@click.option('--shape', type=click.Choice(['rect', 'circle', 'heart']), default='rect', help='Shape of the lithophane.')
+@click.option('--enhance/--no-enhance', default=False, help='Enhance image contrast before processing.')
+def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, frame_height, resolution, shape, enhance):
+    """Generates a flat lithophane STL from an image.
+    
+    INPUT_PATH: Path to the source image file.
+    """
+    click.echo(f"Processing {input_path}...")
+    
+    try:
+        # Generate the mesh
+        mesh_obj = flat_lithophane(
+            image_path=input_path,
+            width_mm=width,
+            height_mm=height,
+            max_thickness=max_thick,
+            min_thickness=min_thick,
+            frame_thick_mm=frame_thick,
+            frame_height_mm=frame_height,
+            resolution=resolution,
+            enhance=enhance,
+            shape=shape
+        )
+        
+        # Determine output path
+        if output is None:
+            base, _ = os.path.splitext(input_path)
+            output = f"{base}.stl"
+            
+        mesh_obj.save(output)
+        click.echo(f"Success! STL saved to: {output}")
+        
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
 
 
 if __name__ == '__main__':

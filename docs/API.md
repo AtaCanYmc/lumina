@@ -1,0 +1,62 @@
+# Lumina Python API Documentation
+
+Lumina can be used as a Python library to programmatically generate lithophanes.
+
+## `lumina.flat_lithophane`
+
+The main function for generating flat (and shaped) lithophanes.
+
+```python
+from lumina import flat_lithophane
+
+def flat_lithophane(
+    image_path: str,
+    width_mm: float = 100.0,
+    height_mm: float = 150.0,
+    max_thickness: float = 3.0,
+    min_thickness: float = 0.5,
+    frame_thick_mm: float = 1.0,
+    frame_height_mm: float = 2.0,
+    resolution: int = 5,
+    enhance: bool = False,
+    shape: str = "rect"
+) -> mesh.Mesh:
+```
+
+### Parameters
+
+- **`image_path`** (`str`): Path to the input image file.
+- **`width_mm`** (`float`, default `100.0`): Target width of the lithophane in millimeters.
+- **`height_mm`** (`float`, default `150.0`): Target height of the lithophane in millimeters.
+- **`max_thickness`** (`float`, default `3.0`): Maximum thickness in mm, corresponding to the blackest parts of the image.
+- **`min_thickness`** (`float`, default `0.5`): Minimum thickness in mm, corresponding to the whitest parts of the image.
+- **`frame_thick_mm`** (`float`, default `1.0`): The thickness (width) of the frame border in mm.
+- **`frame_height_mm`** (`float`, default `2.0`): The height of the frame border in mm. If `0`, it matches the maximum height of the image.
+- **`resolution`** (`int`, default `5`): Resolution in pixels per mm. Determines the detail level.
+- **`enhance`** (`bool`, default `False`): If `True`, applies contrast enhancement to the image before processing.
+- **`shape`** (`str`, default `"rect"`): The shape of the lithophane. Supported values:
+    - `"rect"`: Standard rectangular shape.
+    - `"circle"`: Circular shape.
+    - `"heart"`: Heart shape.
+
+### Returns
+
+- **`mesh.Mesh`**: A `numpy-stl` mesh object representing the generated 3D model.
+
+### Example
+
+```python
+from lumina import flat_lithophane
+
+# Generate a heart-shaped lithophane
+mesh = flat_lithophane(
+    image_path="path/to/image.jpg",
+    shape="heart",
+    width_mm=100,
+    max_thickness=3.0,
+    min_thickness=0.5
+)
+
+# Save the mesh
+mesh.save("my_heart_lithophane.stl")
+```
