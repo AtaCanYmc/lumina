@@ -308,20 +308,25 @@ class HeartShape(ShapeStrategy):
     def create_mask(self, height: int, width: int) -> np.ndarray:
         y, x = np.ogrid[:height, :width]
         cx, cy = width / 2, height / 2
-        # Normalize coordinates. Note: Heart shape often looks better if we scale y slightly differently or shift it.
-        # But keeping the original logic for now.
-        nx = (x - cx) / (width / 2)
-        ny = (y - cy) / (height / 2)
-        # Inverting Y for the formula to match visual expectation if needed, 
-        # but the original code used standard coordinates.
-        # classic implicit heart equation: (x^2 + y^2 - 1)^3 - x^2 * y^3 = 0
-        # NOTE: Original code had: (nx ** 2 + ny ** 2 - 1) ** 3 - nx ** 2 * ny ** 3
-        # However, usually heart is upright if Y points up. In images, Y points down.
-        # Because we flip image in jpg_to_stl (np.flipud), we might need to be careful.
-        # But let's stick to the existing math for now to match `shape_mask` behavior.
         
+        # Scale factor to fit the heart within the [-1, 1] box
+        # The heart equation (x^2 + y^2 - 1)^3 - x^2 * y^3 <= 0 extends roughly to x=[-1.2, 1.2] and y=[-1, 1.2]
+        # So we need to map our [-1, 1] viewport to a larger range, or shrink the coords.
+        # "Zooming out" means multiplying the normalized coords by a factor > 1.
+        scale = 1.4  # Gives some padding
+        
+        # Normalize coordinates to [-scale, scale]
+        nx = ((x - cx) / (width / 2)) * scale
+        
+        # Invert Y to make the heart upright (Lobes at top of image)
+        # Top of image (y=0) should correspond to positive Y in heart equation (Lobes)
+        # Bottom of image (y=h) should correspond to negative Y in heart equation (Tip)
+        ny = -((y - cy) / (height / 2)) * scale
+        
+        # Classic implicit heart equation
         heart = (nx ** 2 + ny ** 2 - 1) ** 3 - nx ** 2 * ny ** 3
         return heart <= 0
+
 
 class ShapeFactory:
     @staticmethod
