@@ -72,6 +72,9 @@ python -m lumina.cli flat photo.jpg --shape circle --width 120
 
 # Bitmap for embedded displays
 python -m lumina.cli bitmap logo.png --width 128 --height 64
+
+# Spiral art
+python -m lumina.cli spiral portrait.jpg --radius 100 --lines 40
 ```
 
 ## 🎨 Features

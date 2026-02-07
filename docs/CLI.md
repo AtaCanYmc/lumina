@@ -93,3 +93,40 @@ python -m lumina.cli bitmap logo.png > logo_data.h
 ```bash
 python -m lumina.cli bitmap icon.jpg --width 32 --height 32 --output-format hex
 ```
+
+---
+
+### `spiral`
+
+Generates a spiral betty art image from a photo.
+
+**Usage:**
+
+```bash
+python -m lumina.cli spiral [OPTIONS] INPUT_PATH
+```
+
+**Options:**
+
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| `--output`, `-o` | `[input]_spiral.png` | Output PNG file path. |
+| `--radius`, `-r` | `100.0` | Radius in mm. |
+| `--resolution` | `5` | Resolution in pixels per mm. |
+| `--lines` | `30` | Number of spiral lines. |
+| `--angle-step` | `0.05` | Angle step for the spiral. |
+
+**Examples:**
+
+**1. Basic Spiral Art**
+
+```bash
+python -m lumina.cli spiral portrait.jpg
+```
+
+**2. High-Detail Spiral for Laser Engraving**
+
+```bash
+python -m lumina.cli spiral photo.jpg --radius 150 --lines 60 --resolution 10
+```
+
