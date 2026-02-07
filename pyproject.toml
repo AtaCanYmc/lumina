@@ -8,15 +8,38 @@ version = "0.1.0"
 authors = [
   { name="Ata Can Yaymacı", email="atacanymc@gmail.com" },
 ]
-description = "Lithophane, Spiral and Bitmap generator for 14th Feb gifts"
+description = "Lithophane, Spiral and Bitmap generator"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
+keywords = ["lithophane", "3d-printing", "stl", "maker", "gift"]
 dependencies = [
-    "numpy",
-    "opencv-python",
-    "numpy-stl",
-    "click"
+    "numpy>=1.20.0",
+    "opencv-python>=4.5.0",
+    "numpy-stl>=2.16.0",
+    "click>=8.0.0"
 ]
 
+[project.urls]
+"Homepage" = "https://github.com/atacanyaymaci/lumina"
+"Bug Tracker" = "https://github.com/atacanyaymaci/lumina/issues"
+
 [project.scripts]
-lumina = "lumina.cli:main"  # CLI komutunu tanımlar
+lumina = "lumina.cli:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
