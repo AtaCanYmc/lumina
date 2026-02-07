@@ -285,61 +285,7 @@ def jpg_to_stl(
 
 
 from abc import ABC, abstractmethod
-
-class ShapeStrategy(ABC):
-    @abstractmethod
-    def create_mask(self, height: int, width: int) -> np.ndarray:
-        pass
-
-class RectShape(ShapeStrategy):
-    def create_mask(self, height: int, width: int) -> np.ndarray:
-        return np.ones((height, width), dtype=bool)
-
-class CircleShape(ShapeStrategy):
-    def create_mask(self, height: int, width: int) -> np.ndarray:
-        y, x = np.ogrid[:height, :width]
-        cx, cy = width / 2, height / 2
-        # Normalize coordinates
-        nx = (x - cx) / (width / 2)
-        ny = (y - cy) / (height / 2)
-        return nx ** 2 + ny ** 2 <= 1
-
-class HeartShape(ShapeStrategy):
-    def create_mask(self, height: int, width: int) -> np.ndarray:
-        y, x = np.ogrid[:height, :width]
-        cx, cy = width / 2, height / 2
-        
-        # Scale factor to fit the heart within the [-1, 1] box
-        # The heart equation (x^2 + y^2 - 1)^3 - x^2 * y^3 <= 0 extends roughly to x=[-1.2, 1.2] and y=[-1, 1.2]
-        # So we need to map our [-1, 1] viewport to a larger range, or shrink the coords.
-        # "Zooming out" means multiplying the normalized coords by a factor > 1.
-        scale = 1.4  # Gives some padding
-        
-        # Normalize coordinates to [-scale, scale]
-        nx = ((x - cx) / (width / 2)) * scale
-        
-        # Invert Y to make the heart upright (Lobes at top of image)
-        # Top of image (y=0) should correspond to positive Y in heart equation (Lobes)
-        # Bottom of image (y=h) should correspond to negative Y in heart equation (Tip)
-        ny = -((y - cy) / (height / 2)) * scale
-        
-        # Classic implicit heart equation
-        heart = (nx ** 2 + ny ** 2 - 1) ** 3 - nx ** 2 * ny ** 3
-        return heart <= 0
-
-
-class ShapeFactory:
-    @staticmethod
-    def get_strategy(shape: str) -> ShapeStrategy:
-        if shape == "circle":
-            return CircleShape()
-        elif shape == "heart":
-            return HeartShape()
-        elif shape == "rect":
-            return RectShape()
-        else:
-            # Default or raise error? The original raised ValueError
-            raise ValueError(f"Unsupported shape: {shape}")
+from .shapes import ShapeFactory, ShapeStrategy
 
 
 def shape_mask(height, width, shape="circle"):
