@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lumina-tools"
+version = "0.1.0"
+authors = [
+  { name="Ata Can Yaymacı", email="atacanymc@gmail.com" },
+]
+description = "Lithophane, Spiral and Bitmap generator for 14th Feb gifts"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "opencv-python",
+    "numpy-stl",
+    "click"
+]
+
+[project.scripts]
+lumina = "lumina.cli:main"  # CLI komutunu tanımlar
