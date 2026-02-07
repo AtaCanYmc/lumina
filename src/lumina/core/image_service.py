@@ -256,10 +256,11 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
     center = (w // 2, h // 2)
     max_r = min(center)
 
-    canvas = np.ones((h, w), dtype=np.uint8) * 255
+    canvas = np.zeros((h, w, 4), dtype=np.uint8)
     
     theta = 0
     prev_pt = None
+    black_pixel = (0, 0, 0, 255)
 
     while True:
         # r = (theta / 2pi) * (max_r / count of lines)
@@ -270,10 +271,21 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
         x = int(center[0] + r * math.cos(theta))
         y = int(center[1] + r * math.sin(theta))
 
+        if x < 0 or x >= w or y < 0 or y >= h:
+            theta += angle_step
+            continue
+
         thickness = int((255 - img[y, x]) / 50) + 1
         
         if prev_pt:
-            cv2.line(canvas, prev_pt, (x, y), (0, 0, 0), thickness, cv2.LINE_AA)
+            cv2.line(
+                canvas,
+                prev_pt,
+                (x, y),
+                black_pixel,
+                thickness,
+                cv2.LINE_AA
+            )
         
         prev_pt = (x, y)
         theta += angle_step
