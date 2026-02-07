@@ -31,8 +31,6 @@ def jpg_to_stl(
         image: np.ndarray,
         max_thick: float = 3.0,
         min_thick: float = 0.5,
-        frame_thick_mm: float = 0.5,
-        frame_height_mm: float = 0.0,
         resolution: int = 5,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Function to convert filename to stl with given width.
@@ -41,8 +39,6 @@ def jpg_to_stl(
         image (np.ndarray): Path to image file
         max_thick (float, optional): Maximum thickness in mm. Defaults to 3.0.
         min_thick (float, optional): Minimum thickness in mm. Defaults to 0.5.
-        frame_thick_mm (float, optional): Frame around image in mm. Defaults to 0.5.
-        frame_height_mm (float, optional): Frame height in mm. Defaults to 0.0.
         resolution (int, optional): Image resolution in pixels per mm. Defaults to 10.
 
     Returns:
@@ -203,14 +199,11 @@ def image_to_flat_stl(
         Mesh
     """
     # 1. Generate base Z matrix (tight, only backplane border)
-    # Note: jpg_to_stl no longer adds the frame.
     _, _, z = jpg_to_stl(
         image=image,
-        frame_thick_mm=0, # Force 0 here, we add it manually
         max_thick=max_th,
         min_thick=min_th,
         resolution=resolution,
-        frame_height_mm=0
     )
 
     # 2. Add Frame Padding (Physical Space)

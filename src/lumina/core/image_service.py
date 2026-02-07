@@ -82,6 +82,18 @@ def normalize_image(image: np.ndarray) -> np.ndarray:
     return image / max_val
 
 
+def invert_image(image: np.ndarray) -> np.ndarray:
+    """Inverts the image.
+
+    Args:
+        image (np.ndarray): Input image.
+
+    Returns:
+        np.ndarray: Inverted image.
+    """
+    return 1 - np.double(image)
+
+
 def resize_image(
         img: np.ndarray,
         width: float,
@@ -205,3 +217,43 @@ def remove_background(img: np.ndarray, threshold: int = 250) -> np.ndarray:
     _, mask = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY_INV)
     result = cv2.bitwise_and(img, img, mask=mask)
     return result
+
+
+def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
+    """Creates a spiral image from an image.
+
+    Args:
+        img (np.ndarray): Input image.
+        lines (int): Number of lines in the spiral. Defaults to 60.
+        angle_step (float): Angle step for the spiral. Defaults to 0.05.
+
+    Returns:
+        np.ndarray: Spiral image.
+    """
+    h, w = img.shape
+    center = (w // 2, h // 2)
+    max_r = min(center)
+
+    canvas = np.ones((h, w), dtype=np.uint8) * 255
+    
+    theta = 0
+    prev_pt = None
+
+    while True:
+        # r = (theta / 2pi) * (max_r / count of lines)
+        r = (theta / (2 * math.pi)) * (max_r / lines)
+        if r >= max_r: break
+
+        x = int(center[0] + r * math.cos(theta))
+        y = int(center[1] + r * math.sin(theta))
+
+        thickness = int((255 - img[y, x]) / 50) + 1
+        
+        if prev_pt:
+            cv2.line(canvas, prev_pt, (x, y), (0, 0, 0), thickness, cv2.LINE_AA)
+        
+        prev_pt = (x, y)
+        theta += angle_step
+
+    return canvas
+
