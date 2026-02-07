@@ -32,6 +32,7 @@ def jpg_to_stl(
         max_thick: float = 3.0,
         min_thick: float = 0.5,
         resolution: int = 5,
+        invert: bool = True,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Function to convert filename to stl with given width.
 
@@ -40,6 +41,7 @@ def jpg_to_stl(
         max_thick (float, optional): Maximum thickness in mm. Defaults to 3.0.
         min_thick (float, optional): Minimum thickness in mm. Defaults to 0.5.
         resolution (int, optional): Image resolution in pixels per mm. Defaults to 10.
+        invert (bool, optional): Invert image. Defaults to True.
 
     Returns:
         tuple[np.ndarray, np.ndarray, np.ndarray]: x, y, z matrices
@@ -59,7 +61,10 @@ def jpg_to_stl(
     image = np.flipud(image)
 
     # Invert threshold for z matrix
-    image = 1 - np.double(image)
+    if invert:
+        image = 1 - np.double(image)
+    else:
+        image = np.double(image)
 
     # Scale z matrix to desired max depth and add base height
     depth_mm = max_thick - min_thick
