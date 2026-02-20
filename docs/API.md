@@ -63,50 +63,6 @@ mesh.save("my_heart_lithophane.stl")
 
 ---
 
-## `lumina.generate_bitmap`
-
-Generates a monochrome bitmap from an image, suitable for embedded displays.
-
-```python
-from lumina import generate_bitmap
-
-def generate_bitmap(
-    image_path: str,
-    width: int = 128,
-    height: int = 64,
-    threshold: int = 128,
-    enhance: bool = False
-) -> np.ndarray:
-```
-
-### Parameters
-
-- **`image_path`** (`str`): Path to the input image file.
-- **`width`** (`int`, default `128`): Target width in pixels.
-- **`height`** (`int`, default `64`): Target height in pixels.
-- **`threshold`** (`int`, default `128`): Binarization threshold (0-255).
-- **`enhance`** (`bool`, default `False`): Apply contrast enhancement before processing.
-
-### Returns
-
-- **`np.ndarray`**: A 2D NumPy array of 0s and 1s representing the bitmap.
-
-### Example
-
-```python
-from lumina import generate_bitmap
-from lumina.core.bitmap_service import export_to_c_array
-
-# Generate a 128x64 bitmap
-bitmap = generate_bitmap("path/to/logo.png", width=128, height=64)
-
-# Export as C array for Arduino/ESP32
-c_code = export_to_c_array(bitmap, var_name="logo_data")
-print(c_code)
-```
-
----
-
 ## `lumina.generate_spiral_betty_png`
 
 Generates a spiral betty (spiral art) image from an input image.

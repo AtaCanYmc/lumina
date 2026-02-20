@@ -61,39 +61,6 @@ python -m lumina.cli flat portrait.jpg --shape circle --width 120 --frame-thick 
 python -m lumina.cli flat love.jpg --shape heart --enhance
 ```
 
-### `bitmap`
-
-Generates a monochrome bitmap for embedded displays (OLED, LCD, etc.).
-
-**Usage:**
-
-```bash
-python -m lumina.cli bitmap [OPTIONS] INPUT_PATH
-```
-
-**Options:**
-
-| Option | Default | Description |
-| :--- | :--- | :--- |
-| `--width` | `128` | Target width in pixels. |
-| `--height` | `64` | Target height in pixels. |
-| `--threshold` | `128` | Binarization threshold (0-255). |
-| `--output-format` | `c_array` | Output format: `c_array` (for C/C++ headers) or `hex` (raw hex string). |
-
-**Examples:**
-
-**1. Generate 128x64 Bitmap for SSD1306**
-
-```bash
-python -m lumina.cli bitmap logo.png > logo_data.h
-```
-
-**2. Generate Hex String for Custom Protocol**
-
-```bash
-python -m lumina.cli bitmap icon.jpg --width 32 --height 32 --output-format hex
-```
-
 ---
 
 ### `spiral`
