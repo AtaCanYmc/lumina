@@ -24,6 +24,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
 
+      - name: Validate tag matches pyproject version
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+
+          ref = os.environ.get('GITHUB_REF_NAME') or os.environ.get('GITHUB_REF', '')
+          # If GITHUB_REF_NAME not set, try to extract from GITHUB_REF
+          if not ref and os.environ.get('GITHUB_REF'):
+              ref = os.environ['GITHUB_REF'].rsplit('/', 1)[-1]
+
+          m = re.match(r'^v(\d+\.\d+\.\d+)$', ref)
+          if not m:
+              raise SystemExit(f"Tag {ref!r} is not in vMAJOR.MINOR.PATCH format")
+
+          tag_ver = m.group(1)
+          text = Path('pyproject.toml').read_text(encoding='utf-8')
+          m2 = re.search(r'^\s*version\s*=\s*"([^"]+)"\s*$', text, re.M)
+          if not m2:
+              raise SystemExit('Could not find version in pyproject.toml')
+          file_ver = m2.group(1)
+
+          if tag_ver != file_ver:
+              raise SystemExit(f"Tag version {tag_ver} does not match pyproject.toml version {file_ver}")
+          print(f"OK: tag {tag_ver} matches pyproject.toml")
+          PY
+
       - name: Build distributions
         run: |
           python -m build --sdist --wheel
