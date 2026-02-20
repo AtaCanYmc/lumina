@@ -64,7 +64,7 @@ jobs:
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-xml
+          name: coverage-xml-${{ github.job }}-${{ github.run_number }}
           path: coverage.xml
 
       - name: Upload coverage to Codecov
