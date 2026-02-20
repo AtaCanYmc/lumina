@@ -71,24 +71,6 @@ python -m lumina.cli spiral portrait.jpg --radius 100 --lines 40
 - **Flexible Output**: STL meshes, C-arrays, PNG images
 - **CLI & Python API**: Use from terminal or integrate into your projects
 
-## 📖 Documentation
-
-- [CLI Reference](docs/CLI.md)
-- [Python API](docs/API.md)
-- [Contributing](docs/CONTRIBUTING.md)
-
-## 🤝 Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-Made with ❤️ for the maker community
-
 ## 🧪 Continuous Integration (CI) & Local Checks (updated)
 
 This repository includes GitHub Actions workflows and `pre-commit` hooks to keep code quality high and releases reproducible. Below is the current, recommended workflow for local development and what CI enforces.
@@ -161,3 +143,21 @@ Notes & recommendations
 - Artifact uploads in CI are named uniquely per matrix job and set to `overwrite: true` to avoid `409 Conflict` when re-running or retrying jobs.
 
 If you want, I can also add a short `CONTRIBUTING.md` section that enforces pre-commit + explains required commit hooks for contributors.
+
+## 📖 Documentation
+
+- [CLI Reference](docs/CLI.md)
+- [Python API](docs/API.md)
+- [Contributing](docs/CONTRIBUTING.md)
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+Made with ❤️ for the maker community
