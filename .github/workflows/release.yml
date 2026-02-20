@@ -128,15 +128,16 @@ jobs:
             git log --pretty=format:'- %s (%an)' > changelog.md || true
           fi
 
-          # Safely write multi-line output: ensure EOF is always written
+          # Safely write multi-line output: ensure EOF is always written and on its own line
           if [ -f changelog.md ]; then
-            printf 'body<<EOF\n' >> "$GITHUB_OUTPUT"
-            sed 's/^/ /' changelog.md >> "$GITHUB_OUTPUT" || true
-            printf 'EOF\n' >> "$GITHUB_OUTPUT"
+            echo 'body<<END' >> "$GITHUB_OUTPUT"
+            awk '{ print " " $0 } END { if (NR==0) print "" }' changelog.md >> "$GITHUB_OUTPUT" || true
+            echo >> "$GITHUB_OUTPUT"
+            echo 'END' >> "$GITHUB_OUTPUT"
           else
-            printf 'body<<EOF\n' >> "$GITHUB_OUTPUT"
-            printf '\n' >> "$GITHUB_OUTPUT"
-            printf 'EOF\n' >> "$GITHUB_OUTPUT"
+            echo 'body<<END' >> "$GITHUB_OUTPUT"
+            echo >> "$GITHUB_OUTPUT"
+            echo 'END' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create GitHub Release
