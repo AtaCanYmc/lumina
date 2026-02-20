@@ -1,0 +1,145 @@
+name: Release (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (semver), e.g. 0.1.1'
+        required: true
+        type: string
+      repository:
+        description: 'Publish target: pypi or testpypi'
+        required: true
+        type: choice
+        options:
+          - pypi
+          - testpypi
+      changelog_from:
+        description: 'Git ref to start changelog from (optional, default previous tag)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+  issues: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Create release and publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Show environment
+        run: |
+          echo "Release inputs: version=${{ github.event.inputs.version }} repository=${{ github.event.inputs.repository }}"
+
+      - name: Bump version in pyproject.toml
+        id: bump
+        run: |
+          set -e
+          NEW_VERSION="${{ github.event.inputs.version }}"
+          FILE=pyproject.toml
+          if ! grep -q '^version' "$FILE"; then
+            echo "pyproject.toml does not contain a version field" >&2
+            exit 1
+          fi
+          # replace version = "..."
+          perl -0777 -pe "s/^version\s*=\s*\"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][^\"]*)?\"/version = \"${NEW_VERSION}\"/m" -i "$FILE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$FILE"
+          git commit -m "chore(release): bump version to ${NEW_VERSION}" || echo "no changes to commit"
+          git push origin HEAD:$(git rev-parse --abbrev-ref HEAD) || true
+          echo "bumped=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Create tag
+        id: tag
+        run: |
+          set -e
+          TAG="v${{ github.event.inputs.version }}"
+          # create annotated tag
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Build distributions
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+          python -m build --sdist --wheel
+
+      - name: Publish to PyPI/TestPyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          set -e
+          REPO="${{ github.event.inputs.repository }}"
+          if [ "$REPO" = "testpypi" ]; then
+            if [ -z "${{ secrets.TEST_PYPI_API_TOKEN }}" ]; then
+              echo "ERROR: TEST_PYPI_API_TOKEN secret is not set" >&2
+              exit 1
+            fi
+            export TWINE_PASSWORD="${{ secrets.TEST_PYPI_API_TOKEN }}"
+            python -m pip install --upgrade pip
+            pip install twine
+            python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          else
+            if [ -z "${{ secrets.PYPI_API_TOKEN }}" ]; then
+              echo "ERROR: PYPI_API_TOKEN secret is not set" >&2
+              exit 1
+            fi
+            export TWINE_PASSWORD="${{ secrets.PYPI_API_TOKEN }}"
+            python -m pip install --upgrade pip
+            pip install twine
+            python -m twine upload dist/*
+          fi
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          set -e
+          TAG="v${{ github.event.inputs.version }}"
+          if [ -n "${{ github.event.inputs.changelog_from }}" ]; then
+            PREV="${{ github.event.inputs.changelog_from }}"
+          else
+            PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+          fi
+          if [ -n "$PREV" ]; then
+            echo "Generating changelog from $PREV..HEAD"
+            git log --pretty=format:'- %s (%an)' "$PREV"..HEAD > changelog.md || true
+          else
+            git log --pretty=format:'- %s (%an)' > changelog.md || true
+          fi
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          sed 's/^/ /' changelog.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          release_name: ${{ steps.tag.outputs.tag }}
+          body: ${{ steps.changelog.outputs.body }}
+
+      - name: Cleanup dist
+        run: |
+          rm -rf dist build *.egg-info
