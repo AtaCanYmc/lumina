@@ -38,10 +38,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install and run pre-commit hooks (blocking)
+      - name: Install and run style checks (isort/black/ruff)
         run: |
-          pip install pre-commit
-          pre-commit run --all-files
+          python -m pip install --upgrade pip
+          pip install isort black ruff
+          # Run check-only versions so CI doesn't auto-fix files
+          isort --check-only .
+          black --check .
+          ruff check .
 
       - name: Lint with ruff (redundant check)
         run: |
