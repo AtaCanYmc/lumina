@@ -1,8 +1,8 @@
 from stl import mesh
 import numpy as np
 
-from src.lumina.core.image_service import read_image, normalize_image, enhance_contrast, resize_image, to_spiral
-from src.lumina.core.stl_service import image_to_flat_stl
+from .core.image_service import read_image, normalize_image, enhance_contrast, resize_image, to_spiral
+from .core.stl_service import image_to_flat_stl
 
 
 def flat_lithophane(

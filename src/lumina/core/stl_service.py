@@ -47,6 +47,14 @@ def jpg_to_stl(
         tuple[np.ndarray, np.ndarray, np.ndarray]: x, y, z matrices
     """
 
+    # Ensure image is a float array in 0..1 range. Accept either 0..255 uint8 or 0..1 floats.
+    image = np.asarray(image)
+    if image.dtype == np.uint8 or image.max() > 1.5:
+        # likely 0..255
+        image = image.astype(np.float64) / 255.0
+    else:
+        image = image.astype(np.float64)
+
     if len(image.shape) > 2:
         raise RuntimeError(f"Image shape {image.shape} is not supported. "
                            f"Only grayscale images are supported.")
@@ -104,6 +112,27 @@ def create_solid_lithophane(x, y, z, mask=None) -> mesh.Mesh:
     Returns:
         mesh.Mesh
     """
+    # Sanitize Z matrix: replace NaN/inf, ensure finite and within reasonable bounds.
+    # This defends against earlier pipeline errors or corrupted inputs that
+    # can produce extreme Z spikes (negative/positive) which look like a
+    # "sopa" (stick) in the output STL. We perform a conservative clamp
+    # using a robust estimate of the finite range.
+    z = np.asarray(z, dtype=np.float64)
+    # Replace NaN with minimum finite value (or 0 if no finite values)
+    finite_mask = np.isfinite(z)
+    if not np.any(finite_mask):
+        # If nothing finite, fallback to zeros
+        z[:] = 0.0
+    else:
+        finite_vals = z[finite_mask]
+        finite_min = float(np.min(finite_vals))
+        finite_max = float(np.max(finite_vals))
+        # Replace non-finite entries
+        z[~finite_mask] = finite_min
+        # Clamp extremes to a slightly extended finite range
+        margin = max(1.0, (finite_max - finite_min) * 0.1)
+        z = np.clip(z, finite_min - margin, finite_max + margin)
+
     rows, cols = z.shape
     faces = []
 
@@ -221,6 +250,15 @@ def image_to_flat_stl(
         resolution=resolution,
         extra_height_mm=frame_height_mm
     )
+
+    # Sanity clamp: ensure Z values stay within expected physical bounds.
+    # This protects against corrupted inputs or earlier bugs that create
+    # extremely large/small Z values (seen as long spikes / "sopa").
+    # Allow a tiny epsilon margin.
+    eps = 1e-6
+    z_min_allowed = min_th - eps
+    z_max_allowed = max_th + frame_height_mm + eps
+    z = np.clip(z, z_min_allowed, z_max_allowed)
 
     # 3. Regenerate X, Y grids (since Z shape changed)
     x1 = np.linspace(0, z.shape[1] / resolution, z.shape[1])

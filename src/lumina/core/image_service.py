@@ -4,7 +4,7 @@ import math
 import cv2
 import numpy as np
 
-from src.lumina.utils.common_utils import generate_uuid_filename
+from ..utils.common_utils import generate_uuid_filename
 
 
 def bytes_to_image(image_bytes: bytes, is_grayscale: bool) -> np.ndarray:

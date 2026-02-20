@@ -1,6 +1,10 @@
 .idea/**
 .venv/**
 __pycache__**
+scripts/*.py
+*.pyc
+*.pyo
+*.pyd
 .DS_Store
 assets/stl/**
 *.stl
