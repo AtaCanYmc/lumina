@@ -13,6 +13,10 @@
 | 🖼️ **Lithophanes** | 3D-printable light art | `.stl` mesh |
 | 🌀 **Spiral Betty** | Spiral art for laser/CNC engraving | `.png` image |
 
+<p align="center">
+  <img src="assets/images/readme/slicer.png" alt="Classic Litho Features Presentation" width="800">
+</p>
+
 ## 🚀 Quick Start
 
 ### Installation
@@ -42,6 +46,10 @@ mesh = flat_lithophane(
 )
 mesh.save("lithophane.stl")
 ```
+
+<p align="center">
+  <img src="assets/images/readme/classic.png" alt="Classic Litho Features Presentation" width="800">
+</p>
 
 ### Create Spiral Art
 
@@ -78,6 +86,10 @@ mesh = flat_lithophane(
 mesh.save("portrait_spiral_lithophane.stl")
 ```
 
+<p align="center">
+  <img src="assets/images/readme/spiral.png" alt="Classic Litho Features Presentation" width="800">
+</p>
+
 ## 💻 CLI Usage
 
 ```bash
@@ -93,7 +105,7 @@ python -m lumina.cli spiral portrait.jpg --radius 100 --lines 40
 - **Multiple Shapes**: Rectangle, Circle, Heart
 - **Smart Framing**: Auto-generated shape-conforming frames
 - **True Mesh Cutting**: Clean edges without artifacts
-- **Flexible Output**: STL meshes, C-arrays, PNG images
+- **Flexible Output**: STL meshes, PNG images
 - **CLI & Python API**: Use from terminal or integrate into your projects
 
 ## 🧪 Continuous Integration (CI) & Local Checks (updated)
