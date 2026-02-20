@@ -93,10 +93,12 @@ def generate_spiral_betty_png(
         np.ndarray: Generated spiral betty.
     """
     img = read_image(image_path, is_grayscale=True)
+
     img = resize_image(
         img=img,
         width=radius_mm * 2,
         height=radius_mm * 2,
         resolution=resolution
     )
+
     return to_spiral(img, lines=lines, angle_step=angle_step)

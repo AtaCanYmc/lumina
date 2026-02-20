@@ -114,9 +114,8 @@ def create_solid_lithophane(x, y, z, mask=None) -> mesh.Mesh:
     """
     # Sanitize Z matrix: replace NaN/inf, ensure finite and within reasonable bounds.
     # This defends against earlier pipeline errors or corrupted inputs that
-    # can produce extreme Z spikes (negative/positive) which look like a
-    # "sopa" (stick) in the output STL. We perform a conservative clamp
-    # using a robust estimate of the finite range.
+    # can produce extreme Z spikes (negative/positive).
+    # We perform a conservative clamp using a robust estimate of the finite range.
     z = np.asarray(z, dtype=np.float64)
     # Replace NaN with minimum finite value (or 0 if no finite values)
     finite_mask = np.isfinite(z)

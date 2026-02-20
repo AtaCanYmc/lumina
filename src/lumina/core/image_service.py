@@ -71,27 +71,6 @@ def read_image(path: str, is_grayscale: bool) -> np.ndarray:
     return img
 
 
-def to_monochrome(image: np.ndarray, threshold: int = 128) -> np.ndarray:
-    """Converts a grayscale image to a 1-bit monochrome bitmap.
-
-    Args:
-        image (np.ndarray): Grayscale input image (0-255).
-        threshold (int): Threshold value for binarization. Defaults to 128.
-
-    Returns:
-        np.ndarray: Binary image (0 or 1) of type uint8.
-    """
-    if len(image.shape) > 2:
-        raise ValueError("Image must be grayscale (2D array).")
-
-    # Apply threshold: pixels > threshold become 1, else 0
-    # Note: For OLEDs, usually 1 is ON (light), 0 is OFF (dark).
-    # In standard image processing, 255 is white (light), 0 is black (dark).
-    # So: Pixel > Threshold -> White (1). Pixel <= Threshold -> Black (0).
-    binary = (image > threshold).astype(np.uint8)
-    return binary
-
-
 def normalize_image(image: np.ndarray) -> np.ndarray:
     """ Normalize image to 0-1 range using min-max scaling.
         Args:
@@ -106,7 +85,8 @@ def normalize_image(image: np.ndarray) -> np.ndarray:
     if max_val == min_val:
         raise ValueError("Image has no contrast.")
 
-    return (image - min_val) / (max_val - min_val)
+    img = (image - min_val) / (max_val - min_val)
+    return (img * 255).astype(np.uint8)
 
 
 def invert_image(image: np.ndarray) -> np.ndarray:
@@ -183,14 +163,7 @@ def enhance_contrast(img: np.ndarray) -> np.ndarray:
 
     # 2. Normalize to uint8
     if img.dtype != np.uint8:
-        min_val = np.min(img)
-        max_val = np.max(img)
-
-        if max_val == min_val:
-            raise ValueError("Image has no contrast.")
-
-        img = (img - min_val) / (max_val - min_val)
-        img = (img * 255).astype(np.uint8)
+        img = normalize_image(img)
 
     # 3. CLAHE uygula
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
