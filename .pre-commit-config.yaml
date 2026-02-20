@@ -1,8 +1,9 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 23.9.1
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
     hooks:
-      - id: black
+      - id: isort
+        files: "\\.py$"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.15
@@ -10,11 +11,10 @@ repos:
       - id: ruff
         args: [--fix]
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
     hooks:
-      - id: isort
-        files: "\\.py$"
+      - id: black
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0

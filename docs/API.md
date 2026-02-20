@@ -145,5 +145,3 @@ spiral = generate_spiral_betty_png("path/to/portrait.jpg", radius_mm=50)
 # Save the result
 cv2.imwrite("spiral_output.png", spiral)
 ```
-
-

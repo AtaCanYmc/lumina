@@ -1,12 +1,14 @@
-import tempfile
 import os
-import numpy as np
+import tempfile
+
 import cv2
+import numpy as np
 import pytest
+
 from lumina.core.image_service import (
-    read_image,
-    normalize_image,
     enhance_contrast,
+    normalize_image,
+    read_image,
     to_spiral,
 )
 
@@ -55,4 +57,3 @@ def test_to_spiral_small_image():
     assert out.shape == (20, 20, 4)
     # Some transparency expected in corners
     assert np.all(out[0, 0] == (0, 0, 0, 0)) or np.all(out[0, -1] == (0, 0, 0, 0))
-

@@ -1,37 +1,75 @@
-import click
 import os
+
+import click
 import cv2
+
 from lumina import flat_lithophane, generate_spiral_betty_png
 
 
 @click.group()
 def cli():
     """Lumina: generating lithophane STLs.
-    
+
     A CLI tool for generating lithophane STLs from images.
     """
     pass
 
 
 @cli.command()
-@click.argument('input_path', type=click.Path(exists=True))
-@click.option('--output', '-o', default=None,
-              help='Output STL file path. Defaults to input filename with .stl extension.')
-@click.option('--width', '-w', default=100.0, help='Width of the lithophane in mm.')
-@click.option('--height', '-h', default=150.0, help='Height of the lithophane in mm.')
-@click.option('--max-thick', default=3.0, help='Maximum thickness (for dark areas) in mm.')
-@click.option('--min-thick', default=0.5, help='Minimum thickness (for light areas) in mm.')
-@click.option('--frame-thick', default=1.0, help='Thickness of the frame border in mm.')
-@click.option('--frame-height', default=2.0, help='Height of the frame border in mm (0 to auto-match max height).')
-@click.option('--resolution', '-r', default=5, help='Resolution in pixels per mm.')
-@click.option('--shape', type=click.Choice(['rect', 'circle', 'heart']), default='rect',
-              help='Shape of the lithophane.')
-@click.option('--enhance/--no-enhance', default=False, help='Enhance image contrast before processing.')
-@click.option('--normalize/--no-normalize', default=False, help='Normalize image before processing.')
-def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, frame_height, resolution, shape,
-         enhance, normalize):
+@click.argument("input_path", type=click.Path(exists=True))
+@click.option(
+    "--output",
+    "-o",
+    default=None,
+    help="Output STL file path. Defaults to input filename with .stl extension.",
+)
+@click.option("--width", "-w", default=100.0, help="Width of the lithophane in mm.")
+@click.option("--height", "-h", default=150.0, help="Height of the lithophane in mm.")
+@click.option(
+    "--max-thick", default=3.0, help="Maximum thickness (for dark areas) in mm."
+)
+@click.option(
+    "--min-thick", default=0.5, help="Minimum thickness (for light areas) in mm."
+)
+@click.option("--frame-thick", default=1.0, help="Thickness of the frame border in mm.")
+@click.option(
+    "--frame-height",
+    default=2.0,
+    help="Height of the frame border in mm (0 to auto-match max height).",
+)
+@click.option("--resolution", "-r", default=5, help="Resolution in pixels per mm.")
+@click.option(
+    "--shape",
+    type=click.Choice(["rect", "circle", "heart"]),
+    default="rect",
+    help="Shape of the lithophane.",
+)
+@click.option(
+    "--enhance/--no-enhance",
+    default=False,
+    help="Enhance image contrast before processing.",
+)
+@click.option(
+    "--normalize/--no-normalize",
+    default=False,
+    help="Normalize image before processing.",
+)
+def flat(
+    input_path,
+    output,
+    width,
+    height,
+    max_thick,
+    min_thick,
+    frame_thick,
+    frame_height,
+    resolution,
+    shape,
+    enhance,
+    normalize,
+):
     """Generates a flat lithophane STL from an image.
-    
+
     INPUT_PATH: Path to the source image file.
     """
     click.echo(f"Processing {input_path}...")
@@ -49,7 +87,7 @@ def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, f
             resolution=resolution,
             enhance=enhance,
             normalize=normalize,
-            shape=shape
+            shape=shape,
         )
 
         # Determine output path
@@ -65,12 +103,12 @@ def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, f
 
 
 @cli.command()
-@click.argument('input_path', type=click.Path(exists=True))
-@click.option('--output', '-o', default=None, help='Output PNG file path.')
-@click.option('--radius', '-r', default=100.0, help='Radius in mm.')
-@click.option('--resolution', default=5, help='Resolution in pixels per mm.')
-@click.option('--lines', default=30, help='Number of spiral lines.')
-@click.option('--angle-step', default=0.05, help='Angle step for spiral.')
+@click.argument("input_path", type=click.Path(exists=True))
+@click.option("--output", "-o", default=None, help="Output PNG file path.")
+@click.option("--radius", "-r", default=100.0, help="Radius in mm.")
+@click.option("--resolution", default=5, help="Resolution in pixels per mm.")
+@click.option("--lines", default=30, help="Number of spiral lines.")
+@click.option("--angle-step", default=0.05, help="Angle step for spiral.")
 def spiral(input_path, output, radius, resolution, lines, angle_step):
     """Generates a spiral betty art image."""
     try:
@@ -81,7 +119,7 @@ def spiral(input_path, output, radius, resolution, lines, angle_step):
             radius_mm=radius,
             resolution=resolution,
             lines=lines,
-            angle_step=angle_step
+            angle_step=angle_step,
         )
 
         # Determine output path
@@ -96,5 +134,5 @@ def spiral(input_path, output, radius, resolution, lines, angle_step):
         click.echo(f"Error: {e}", err=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

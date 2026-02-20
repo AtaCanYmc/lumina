@@ -1,8 +1,10 @@
 import os
 import tempfile
-import numpy as np
+
 import cv2
+import numpy as np
 from click.testing import CliRunner
+
 from lumina.cli import cli
 
 
@@ -20,7 +22,9 @@ class TestFlatCommand:
             img_path = os.path.join(tmpdir, "test.jpg")
             create_test_image(img_path)
 
-            result = runner.invoke(cli, ['flat', img_path, '--width', '50', '--height', '50'])
+            result = runner.invoke(
+                cli, ["flat", img_path, "--width", "50", "--height", "50"]
+            )
 
             assert result.exit_code == 0
             assert "Success!" in result.output
@@ -32,7 +36,7 @@ class TestFlatCommand:
             img_path = os.path.join(tmpdir, "test.jpg")
             create_test_image(img_path)
 
-            result = runner.invoke(cli, ['flat', img_path, '--shape', 'circle'])
+            result = runner.invoke(cli, ["flat", img_path, "--shape", "circle"])
 
             assert result.exit_code == 0
             assert "Success!" in result.output
@@ -45,7 +49,7 @@ class TestSpiralCommand:
             img_path = os.path.join(tmpdir, "test.jpg")
             create_test_image(img_path)
 
-            result = runner.invoke(cli, ['spiral', img_path, '--radius', '50'])
+            result = runner.invoke(cli, ["spiral", img_path, "--radius", "50"])
 
             assert result.exit_code == 0
             assert "Success!" in result.output
@@ -58,7 +62,7 @@ class TestSpiralCommand:
             output_path = os.path.join(tmpdir, "custom_spiral.png")
             create_test_image(img_path)
 
-            result = runner.invoke(cli, ['spiral', img_path, '-o', output_path])
+            result = runner.invoke(cli, ["spiral", img_path, "-o", output_path])
 
             assert result.exit_code == 0
             assert os.path.exists(output_path)

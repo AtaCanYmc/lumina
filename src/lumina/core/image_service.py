@@ -1,5 +1,5 @@
-import os
 import math
+import os
 
 import cv2
 import numpy as np
@@ -22,7 +22,9 @@ def read_image(path: str, is_grayscale: bool) -> np.ndarray:
         # Read unchanged so we can detect alpha channel for PNGs
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if img is None:
-            raise ValueError(f"The image file is corrupted or in an unsupported format: {path}")
+            raise ValueError(
+                f"The image file is corrupted or in an unsupported format: {path}"
+            )
 
         # If PNG has alpha channel (BGRA)
         if img.ndim == 3 and img.shape[2] == 4:
@@ -47,17 +49,19 @@ def read_image(path: str, is_grayscale: bool) -> np.ndarray:
     # Fallback: color read (no alpha preservation)
     img = cv2.imread(path, cv2.IMREAD_COLOR)
     if img is None:
-        raise ValueError(f"The image file is corrupted or in an unsupported format: {path}")
+        raise ValueError(
+            f"The image file is corrupted or in an unsupported format: {path}"
+        )
     return img
 
 
 def normalize_image(image: np.ndarray) -> np.ndarray:
-    """ Normalize image to 0-1 range using min-max scaling.
-        Args:
-            image (np.ndarray): Image
+    """Normalize image to 0-1 range using min-max scaling.
+    Args:
+        image (np.ndarray): Image
 
-        Returns:
-            np.ndarray: Normalized image
+    Returns:
+        np.ndarray: Normalized image
     """
     min_val = np.min(image)
     max_val = np.max(image)
@@ -82,10 +86,7 @@ def invert_image(image: np.ndarray) -> np.ndarray:
 
 
 def resize_image(
-        img: np.ndarray,
-        width: float,
-        height: float,
-        resolution: int = 10
+    img: np.ndarray, width: float, height: float, resolution: int = 10
 ) -> np.ndarray:
     """
     Resizes the image to the specified width and height in mm.
@@ -102,13 +103,14 @@ def resize_image(
     target_w = int(width * resolution)
     target_h = int(height * resolution)
     z_dim = img.shape[2] if len(img.shape) == 3 else 1
-    new_shape = (target_w, target_h, z_dim) if z_dim > 1 \
-        else (target_w, target_h)
+    new_shape = (target_w, target_h, z_dim) if z_dim > 1 else (target_w, target_h)
     img = cv2.resize(img, new_shape, interpolation=cv2.INTER_AREA)
     return img
 
 
-def scale_image(img: np.ndarray, width_mm: int = 100, resolution: int = 10) -> np.ndarray:
+def scale_image(
+    img: np.ndarray, width_mm: int = 100, resolution: int = 10
+) -> np.ndarray:
     """
     Scales image to given width in mm with given resolution in pixel/mm.
 
@@ -124,8 +126,11 @@ def scale_image(img: np.ndarray, width_mm: int = 100, resolution: int = 10) -> n
     x_dim = img.shape[1]
     z_dim = img.shape[2] if len(img.shape) == 3 else 1
     scale = width_mm * resolution / x_dim
-    new_shape = (int(y_dim * scale), int(x_dim * scale), z_dim) if z_dim > 1 \
+    new_shape = (
+        (int(y_dim * scale), int(x_dim * scale), z_dim)
+        if z_dim > 1
         else (int(y_dim * scale), int(x_dim * scale))
+    )
     img = cv2.resize(img, new_shape, interpolation=cv2.INTER_AREA)
     return img
 
@@ -202,14 +207,7 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
         thickness = int((255 - img[y, x]) / 50) + 1
 
         if prev_pt:
-            cv2.line(
-                canvas,
-                prev_pt,
-                (x, y),
-                black_pixel,
-                thickness,
-                cv2.LINE_AA
-            )
+            cv2.line(canvas, prev_pt, (x, y), black_pixel, thickness, cv2.LINE_AA)
 
         prev_pt = (x, y)
         theta += angle_step

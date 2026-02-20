@@ -129,4 +129,3 @@ python -m lumina.cli spiral portrait.jpg
 ```bash
 python -m lumina.cli spiral photo.jpg --radius 150 --lines 60 --resolution 10
 ```
-

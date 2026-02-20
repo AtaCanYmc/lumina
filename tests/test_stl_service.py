@@ -3,9 +3,12 @@ import pytest
 
 from lumina.core.shapes import ShapeFactory
 from lumina.core.stl_service import (
-    shape_mask,
+    add_frame_to_z,
     apply_shape_to_heightmap,
-    image_to_flat_stl, add_frame_to_z, jpg_to_stl, create_solid_lithophane
+    create_solid_lithophane,
+    image_to_flat_stl,
+    jpg_to_stl,
+    shape_mask,
 )
 
 
@@ -56,10 +59,10 @@ def test_image_to_flat_stl_integration():
         min_th=0.5,
         frame_thick_mm=0.0,
         resolution=1,
-        shape="circle"
+        shape="circle",
     )
     assert mesh is not None
-    # We can't easily check the mesh content for shape without complex logic, 
+    # We can't easily check the mesh content for shape without complex logic,
     # but we can verify it generated valid mesh data.
     assert len(mesh.points) > 0
 
@@ -70,12 +73,22 @@ def test_image_to_flat_stl_mesh_cutout():
 
     # Generate RECT mesh
     mesh_rect = image_to_flat_stl(
-        image=image, max_th=3.0, min_th=0.5, frame_thick_mm=0, resolution=1, shape="rect"
+        image=image,
+        max_th=3.0,
+        min_th=0.5,
+        frame_thick_mm=0,
+        resolution=1,
+        shape="rect",
     )
 
     # Generate CIRCLE mesh
     mesh_circle = image_to_flat_stl(
-        image=image, max_th=3.0, min_th=0.5, frame_thick_mm=0, resolution=1, shape="circle"
+        image=image,
+        max_th=3.0,
+        min_th=0.5,
+        frame_thick_mm=0,
+        resolution=1,
+        shape="circle",
     )
 
     # Rect mesh should be full grid.
@@ -85,9 +98,11 @@ def test_image_to_flat_stl_mesh_cutout():
     print(f"Rect Vectors: {len(mesh_rect.vectors)}")
     print(f"Circle Vectors: {len(mesh_circle.vectors)}")
 
-    assert len(mesh_circle.vectors) < len(mesh_rect.vectors), "Circle mesh should have fewer faces than Rect mesh"
+    assert len(mesh_circle.vectors) < len(
+        mesh_rect.vectors
+    ), "Circle mesh should have fewer faces than Rect mesh"
 
-    # Rough check of ratio (should be around 0.78 for circle vs square, 
+    # Rough check of ratio (should be around 0.78 for circle vs square,
     # but walls add some faces, backplane is double, etc.)
     # Just asserting it's substantially smaller is enough to prove "cutting" happens.
     ratio = len(mesh_circle.vectors) / len(mesh_rect.vectors)
@@ -100,20 +115,32 @@ def test_image_to_flat_stl_frame_generation():
 
     # Generate CIRCLE mesh WITHOUT frame
     mesh_no_frame = image_to_flat_stl(
-        image=image, max_th=3.0, min_th=0.5, frame_thick_mm=0, resolution=1, shape="circle"
+        image=image,
+        max_th=3.0,
+        min_th=0.5,
+        frame_thick_mm=0,
+        resolution=1,
+        shape="circle",
     )
 
     # Generate CIRCLE mesh WITH frame
     # frame_thick_mm=5 -> 5 pixels padding
     mesh_frame = image_to_flat_stl(
-        image=image, max_th=3.0, min_th=0.5, frame_thick_mm=5, resolution=1, shape="circle"
+        image=image,
+        max_th=3.0,
+        min_th=0.5,
+        frame_thick_mm=5,
+        resolution=1,
+        shape="circle",
     )
 
     # Frame adds area around the circle, so mesh should have more faces.
     print(f"No Frame Vectors: {len(mesh_no_frame.vectors)}")
     print(f"With Frame Vectors: {len(mesh_frame.vectors)}")
 
-    assert len(mesh_frame.vectors) > len(mesh_no_frame.vectors), "Frame should add faces to the mesh"
+    assert len(mesh_frame.vectors) > len(
+        mesh_no_frame.vectors
+    ), "Frame should add faces to the mesh"
 
     # Check Max Z
     # With frame, max Z should be higher?
@@ -128,7 +155,13 @@ def test_image_to_flat_stl_frame_generation():
 
     # If we set frame_height_mm=2.0 (extra)
     mesh_frame_high = image_to_flat_stl(
-        image=image, max_th=3.0, min_th=0.5, frame_thick_mm=5, frame_height_mm=2.0, resolution=1, shape="circle"
+        image=image,
+        max_th=3.0,
+        min_th=0.5,
+        frame_thick_mm=5,
+        frame_height_mm=2.0,
+        resolution=1,
+        shape="circle",
     )
 
     z_values = mesh_frame_high.points[:, [2, 5, 8]].flatten()
@@ -153,24 +186,27 @@ def test_image_to_flat_stl_frame_height_on_white_image():
     # Circle shape, Frame thick 5mm
     # min_th=0.5. Frame should be HIGH (max_th + extra? or just max_th?)
     # usually frame height is max_z (from image) + extra. Note: jpg_to_stl logic.
-    # If image is white, max_z of image is 0.5. 
-    # But jpg_to_stl might frame it at 0.5? 
+    # If image is white, max_z of image is 0.5.
+    # But jpg_to_stl might frame it at 0.5?
     # Let's check jpg_to_stl: frame_height = np.max(z) + extra_height_mm.
     # If image is all 0.5, then frame is 0.5.
     # That's not good for a frame usually? Frame is usually "thickest part".
     # Wait, jpg_to_stl takes 'max_thick' processing argument but Z depends on Image.
     # If image is faint, Z is low.
 
-    # But usually a frame is meant to stand out? 
+    # But usually a frame is meant to stand out?
     # Or at least be at the "Frame Height" level.
     # Let's explicitly ask for extra height.
 
     extra_h = 2.0
     mesh_obj = image_to_flat_stl(
         image=image,
-        max_th=3.0, min_th=0.5,
-        frame_thick_mm=5, frame_height_mm=extra_h,
-        resolution=1, shape="circle"
+        max_th=3.0,
+        min_th=0.5,
+        frame_thick_mm=5,
+        frame_height_mm=extra_h,
+        resolution=1,
+        shape="circle",
     )
 
     # The frame should be at least at Z = (image_max_z + extra_h).
