@@ -53,6 +53,31 @@ spiral = generate_spiral_betty_png("portrait.jpg", radius_mm=50)
 cv2.imwrite("spiral_art.png", spiral)
 ```
 
+### Spiral then Lithophane (chain example)
+
+You can chain the spiral generator and the lithophane generator: first produce a Spiral Betty PNG, then feed that PNG to `flat_lithophane` to create an STL.
+
+```python
+from lumina import generate_spiral_betty_png, flat_lithophane
+import cv2
+
+# 1) Generate a spiral PNG from an input image
+input_photo = "portrait.jpg"  # your source image
+spiral_png = "portrait_spiral.png"
+spiral_img = generate_spiral_betty_png(image_path=input_photo, radius_mm=50)
+cv2.imwrite(spiral_png, spiral_img)
+
+# 2) Create a lithophane from the generated spiral PNG
+mesh = flat_lithophane(
+    image_path=spiral_png,
+    shape="rect",
+    width_mm=100,
+    max_thickness=3.0,
+    min_thickness=0.5,
+)
+mesh.save("portrait_spiral_lithophane.stl")
+```
+
 ## 💻 CLI Usage
 
 ```bash

@@ -136,3 +136,11 @@ def spiral(input_path, output, radius, resolution, lines, angle_step):
 
 if __name__ == "__main__":
     cli()
+
+
+def main():
+    """Console script entry point expected by pyproject: lumina.cli:main
+
+    Keeps backward compatibility with the current `cli()` function.
+    """
+    cli()
