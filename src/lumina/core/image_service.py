@@ -4,26 +4,6 @@ import math
 import cv2
 import numpy as np
 
-from ..utils.common_utils import generate_uuid_filename
-
-
-def bytes_to_image(image_bytes: bytes, is_grayscale: bool) -> np.ndarray:
-    """Converts image bytes to a color numpy array.
-
-    Args:
-        image_bytes (bytes): Image in bytes.
-        is_grayscale (bool): Whether to load the image in grayscale.
-
-    Returns:
-        np.ndarray: Image as a numpy array.
-    """
-    nparr = np.frombuffer(image_bytes, np.uint8)
-    color = cv2.IMREAD_GRAYSCALE if is_grayscale else cv2.IMREAD_COLOR
-    img = cv2.imdecode(nparr, color)
-    if img is None:
-        raise ValueError("Image could not be decoded.")
-    return img
-
 
 def read_image(path: str, is_grayscale: bool) -> np.ndarray:
     """
@@ -173,23 +153,6 @@ def enhance_contrast(img: np.ndarray) -> np.ndarray:
     return img.astype(np.float32) / 255.0
 
 
-def rotate_image(img: np.ndarray, angle: float) -> np.ndarray:
-    """Rotates the image by the specified angle.
-
-    Args:
-        img (np.ndarray): Input image.
-        angle (float): Angle in degrees.
-
-    Returns:
-        np.ndarray: Rotated image.
-    """
-    (h, w) = img.shape[:2]
-    center = (w // 2, h // 2)
-    rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
-    rotated = cv2.warpAffine(img, rotation_matrix, (w, h))
-    return rotated
-
-
 def show_image_window(window_name: str, img: np.ndarray) -> None:
     """Displays the image in a window for debugging purposes.
 
@@ -200,42 +163,6 @@ def show_image_window(window_name: str, img: np.ndarray) -> None:
     cv2.imshow(window_name, img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-
-def save_image_to_file(img: np.ndarray, path: str, extension: str) -> str:
-    """Saves the image to a file.
-
-    Args:
-        img (np.ndarray): Image to save.
-        path (str): Directory path to save the image.
-        extension (str): File extension (e.g., 'jpg', 'png').
-
-    Returns:
-        str: Path to the saved image file.
-    """
-    file_path = generate_uuid_filename(path, extension)
-    cv2.imwrite(file_path, img)
-    return file_path
-
-
-def remove_background(img: np.ndarray, threshold: int = 250) -> np.ndarray:
-    """Removes white background from the image.
-
-    Args:
-        img (np.ndarray): Input image.
-        threshold (int): Threshold value to consider as background.
-
-    Returns:
-        np.ndarray: Image with background removed.
-    """
-    if len(img.shape) == 3 and img.shape[2] == 3:
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    else:
-        gray = img
-
-    _, mask = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY_INV)
-    result = cv2.bitwise_and(img, img, mask=mask)
-    return result
 
 
 def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
