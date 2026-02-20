@@ -52,18 +52,13 @@ jobs:
       - name: Bump version in pyproject.toml
         id: bump
         run: |
-          set -e
+          set -euo pipefail
           NEW_VERSION="${{ github.event.inputs.version }}"
-          FILE=pyproject.toml
-          if ! grep -q '^\s*version' "$FILE"; then
-            echo "pyproject.toml does not contain a version field" >&2
-            exit 1
-          fi
-          # replace version = "..." (allow optional leading whitespace)
-          perl -0777 -pe "s/^\s*version\s*=\s*\"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][^\"]*)?\"/version = \"${NEW_VERSION}\"/m" -i "$FILE"
+          python scripts/bump_version.py "$NEW_VERSION"
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$FILE"
+          git add pyproject.toml
           git commit -m "chore(release): bump version to ${NEW_VERSION}" || echo "no changes to commit"
           git push origin HEAD:$(git rev-parse --abbrev-ref HEAD) || true
           echo "bumped=${NEW_VERSION}" >> $GITHUB_OUTPUT
@@ -73,16 +68,21 @@ jobs:
         run: |
           set -e
           TAG="v${{ github.event.inputs.version }}"
-          # create annotated tag
           git tag -a "$TAG" -m "Release $TAG"
           git push origin "$TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Build distributions
+        env:
+          VERSION: ${{ github.event.inputs.version }}
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
           pip install build
           python -m build --sdist --wheel
+
+          # Run dist-version check script
+          python scripts/check_dist_version.py "${{ github.event.inputs.version }}"
 
       - name: Publish to PyPI/TestPyPI
         env:
@@ -128,7 +128,6 @@ jobs:
             git log --pretty=format:'- %s (%an)' > changelog.md || true
           fi
 
-          # Safely write multi-line output to GITHUB_OUTPUT and ensure EOF is always present
           if [ -f changelog.md ]; then
             {
               printf 'body<<EOF\n'
