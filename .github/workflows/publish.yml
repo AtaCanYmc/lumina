@@ -42,14 +42,23 @@ jobs:
           # Try to get previous tag; if none, include all commits
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
           if [ -n "$PREV_TAG" ]; then
-            git log --pretty=format:'- %s (%an)' "$PREV_TAG"..HEAD > changelog.md
+            git log --pretty=format:'- %s (%an)' "$PREV_TAG"..HEAD > changelog.md || true
           else
-            git log --pretty=format:'- %s (%an)' > changelog.md
+            git log --pretty=format:'- %s (%an)' > changelog.md || true
           fi
-          # Write multi-line output safely
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          sed 's/^/ /' changelog.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Write multi-line output safely and robustly even if sed fails
+          if [ -f changelog.md ]; then
+            {
+              printf 'body<<EOF\n'
+              sed 's/^/ /' changelog.md || true
+              printf 'EOF\n'
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
+            echo " " >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub Release
         uses: actions/create-release@v1

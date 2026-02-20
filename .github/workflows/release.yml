@@ -127,9 +127,19 @@ jobs:
           else
             git log --pretty=format:'- %s (%an)' > changelog.md || true
           fi
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          sed 's/^/ /' changelog.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Safely write multi-line output to GITHUB_OUTPUT and ensure EOF is always present
+          if [ -f changelog.md ]; then
+            {
+              printf 'body<<EOF\n'
+              sed 's/^/ /' changelog.md || true
+              printf 'EOF\n'
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
+            echo " " >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
