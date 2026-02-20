@@ -2,7 +2,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-24%20passed-brightgreen.svg)]()
 
 **Lumina** is a powerful Python toolkit for makers, artists, and 3D printing enthusiasts. Transform your images into stunning physical art pieces.
 
@@ -11,7 +11,6 @@
 | Feature | Description | Output |
 |---------|-------------|--------|
 | 🖼️ **Lithophanes** | 3D-printable light art | `.stl` mesh |
-| 🔲 **Bitmaps** | Monochrome images for OLED/LCD displays | C-array / Hex |
 | 🌀 **Spiral Betty** | Spiral art for laser/CNC engraving | `.png` image |
 
 ## 🚀 Quick Start
@@ -44,16 +43,6 @@ mesh = flat_lithophane(
 mesh.save("lithophane.stl")
 ```
 
-### Generate Bitmap for OLED
-
-```python
-from lumina import generate_bitmap
-from lumina.core.bitmap_service import export_to_c_array
-
-bitmap = generate_bitmap("logo.png", width=128, height=64)
-print(export_to_c_array(bitmap, "logo_data"))
-```
-
 ### Create Spiral Art
 
 ```python
@@ -69,9 +58,6 @@ cv2.imwrite("spiral_art.png", spiral)
 ```bash
 # Lithophane
 python -m lumina.cli flat photo.jpg --shape circle --width 120
-
-# Bitmap for embedded displays
-python -m lumina.cli bitmap logo.png --width 128 --height 64
 
 # Spiral art
 python -m lumina.cli spiral portrait.jpg --radius 100 --lines 40
@@ -103,63 +89,75 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 Made with ❤️ for the maker community
 
-## 🧪 Continuous Integration (CI) & Local Checks
+## 🧪 Continuous Integration (CI) & Local Checks (updated)
 
-This repository includes GitHub Actions workflows and pre-commit hooks to keep code quality high and releases reproducible.
+This repository includes GitHub Actions workflows and `pre-commit` hooks to keep code quality high and releases reproducible. Below is the current, recommended workflow for local development and what CI enforces.
 
-- CI workflow: `.github/workflows/python-ci.yml`
-  - Runs on pushes and PRs to `main`/`master`.
-  - Matrix: Python 3.10, 3.11, 3.12.
-  - Installs dependencies from `requirements.txt`, runs `ruff` (lint), runs `pytest` with coverage and uploads `coverage.xml` to Codecov if `CODECOV_TOKEN` secret is set.
+What CI does now
 
-- Publish workflow: `.github/workflows/publish.yml`
-  - Triggers on tags like `vX.Y.Z` and publishes wheels and sdist to PyPI using `PYPI_API_TOKEN` secret.
+- Installs runtime dependencies and the package itself (editable) so tests can import `lumina`:
+  - `pip install -r requirements.txt` then `pip install -e .`
+- Runs style checks in *check-only* mode (so CI does not mutate files):
+  - `isort --check-only .`
+  - `black --check .`
+  - `ruff check .`
+- Runs `pytest` with coverage and uploads the generated `coverage.xml` artifact. The artifact name is generated per matrix job/run (to avoid 409 conflicts) and CI uploads to Codecov if configured.
 
-- pre-commit config: `.pre-commit-config.yaml`
-  - Includes `black`, `ruff`, `isort` and common pre-commit hooks.
+Why this matters
 
-Quick local setup
+- CI no longer runs `pre-commit run --all-files` in a way that modifies files; instead it enforces that the repository is already formatted. Developers must run formatting locally and commit the results to avoid CI failures.
+- The workflow installs the package under test so tests won't fail with `ModuleNotFoundError: No module named 'lumina'`.
 
-1. Create and activate a virtualenv (recommended):
+Quick local setup (recommended)
+
+1. Create and activate a virtualenv:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
 
-2. Install project dependencies:
+2. Install dependencies and the package in editable mode:
 
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install -e .
 ```
 
-3. Install pre-commit hooks (one-time):
+3. Install and use pre-commit hooks (one-time):
 
 ```bash
 pip install pre-commit
 pre-commit install
-# To run on all files once
+# Apply hooks & auto-fixes locally
 pre-commit run --all-files
+# Stage and commit the changes made by hooks
+git add -A
+git commit -m "Apply pre-commit formatting"
 ```
 
-4. Run tests and coverage locally:
+4. Run tests & coverage locally:
 
 ```bash
 pip install pytest pytest-cov
-pytest -q --cov=src --cov-report=xml:coverage.xml
+pytest -q --cov=lumina --cov-report=xml:coverage.xml
 ```
 
 Publishing to PyPI
 
 - To publish, create a git tag (`git tag vX.Y.Z && git push --tags`) and ensure repository secret `PYPI_API_TOKEN` is set (token created on PyPI).
-- The `publish.yml` workflow will build and publish the package.
+- The `publish.yml` workflow builds sdist and wheel and publishes to PyPI.
 
 Secrets for CI
 
 - `PYPI_API_TOKEN`: required for automatic PyPI publishing.
-- `CODECOV_TOKEN` (optional): set this if you want Codecov upload to use a token (for private repos); for public repos Codecov sometimes works without it.
+- `CODECOV_TOKEN` (optional): set this if you want Codecov upload to use a token (for private repos); for public repos Codecov may work without it.
 
-If you want, I can also:
-- Add a Codecov badge to the top of the README once Codecov is configured.
-- Make `ruff` non-blocking in CI (current config fails CI on lint errors) if you'd prefer warnings instead.
+Notes & recommendations
+
+- Run `pre-commit run --all-files` locally before pushing; CI will reject pushes that aren’t formatted.
+- If you prefer CI to be less strict about formatting, we can remove `--fix` from the `ruff` pre-commit hook or make lint checks non-blocking in CI. I can apply that change if you want.
+- Artifact uploads in CI are named uniquely per matrix job and set to `overwrite: true` to avoid `409 Conflict` when re-running or retrying jobs.
+
+If you want, I can also add a short `CONTRIBUTING.md` section that enforces pre-commit + explains required commit hooks for contributors.
