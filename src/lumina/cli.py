@@ -27,8 +27,9 @@ def cli():
 @click.option('--shape', type=click.Choice(['rect', 'circle', 'heart']), default='rect',
               help='Shape of the lithophane.')
 @click.option('--enhance/--no-enhance', default=False, help='Enhance image contrast before processing.')
+@click.option('--normalize/--no-normalize', default=False, help='Normalize image before processing.')
 def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, frame_height, resolution, shape,
-         enhance):
+         enhance, normalize):
     """Generates a flat lithophane STL from an image.
     
     INPUT_PATH: Path to the source image file.
@@ -47,6 +48,7 @@ def flat(input_path, output, width, height, max_thick, min_thick, frame_thick, f
             frame_height_mm=frame_height,
             resolution=resolution,
             enhance=enhance,
+            normalize=normalize,
             shape=shape
         )
 

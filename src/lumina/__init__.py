@@ -15,6 +15,7 @@ def flat_lithophane(
         frame_height_mm: float = 2.0,
         resolution: int = 5,
         enhance: bool = False,
+        normalize: bool = False,
         shape: str = "rect"
 ) -> mesh.Mesh:
     """ It processes the image, generates an STL file, and returns its path.
@@ -34,13 +35,16 @@ def flat_lithophane(
         frame_height_mm (float, optional): Frame height in mm (0 for same height as images max point). Defaults to 2.0.
         resolution (int, optional): Image resolution in pixels per mm. Defaults to 5.
         enhance (bool, optional): Enhance image. Defaults to False.
+        normalize (bool, optional): Normalize image. Defaults to False.
         shape   (str, optional): Mesh shape Defaults to rect.
 
     Returns:
         mesh.Mesh: Generated STL mesh.
     """
     img = read_image(image_path, is_grayscale=True)
-    img = normalize_image(img)
+
+    if normalize:
+        img = normalize_image(img)
 
     if enhance:
         img = enhance_contrast(img)

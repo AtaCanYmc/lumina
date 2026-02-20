@@ -29,22 +29,45 @@ def read_image(path: str, is_grayscale: bool) -> np.ndarray:
     """
     Reads the image at the given path and returns it as a numpy array.
 
-    Args:
-        path (str): Path to the image.
-        is_grayscale (bool): Whether to load the image in grayscale.
-
-    Returns:
-        np.ndarray: Image as a numpy array.
+    When `is_grayscale=True`, this function will read PNGs with
+    IMREAD_UNCHANGED to detect an alpha channel. If present, fully-transparent
+    pixels (alpha==0) are treated as white (255) in the returned grayscale
+    image. This prevents transparent black from being interpreted as black and
+    producing a full/solid lithophane plate.
     """
     if not os.path.exists(path):
         raise FileNotFoundError(f"Image not found: {path}")
 
-    color_mode = cv2.IMREAD_GRAYSCALE if is_grayscale else cv2.IMREAD_COLOR
-    img = cv2.imread(path, color_mode)
+    if is_grayscale:
+        # Read unchanged so we can detect alpha channel for PNGs
+        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+        if img is None:
+            raise ValueError(f"The image file is corrupted or in an unsupported format: {path}")
 
+        # If PNG has alpha channel (BGRA)
+        if img.ndim == 3 and img.shape[2] == 4:
+            bgr = img[:, :, :3]
+            alpha = img[:, :, 3]
+            gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+            gray = gray.astype(np.uint8)
+            # Treat fully transparent pixels as white (minimum thickness)
+            gray[alpha == 0] = 255
+            return gray
+
+        # Regular BGR color image
+        if img.ndim == 3 and img.shape[2] == 3:
+            return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        # Already grayscale
+        if img.ndim == 2:
+            return img
+
+        raise ValueError(f"Unsupported image format for grayscale read: {path}")
+
+    # Fallback: color read (no alpha preservation)
+    img = cv2.imread(path, cv2.IMREAD_COLOR)
     if img is None:
-        raise ValueError(f"The image file is corrupted or in an unsupported format.: {path}")
-
+        raise ValueError(f"The image file is corrupted or in an unsupported format: {path}")
     return img
 
 
@@ -84,6 +107,7 @@ def normalize_image(image: np.ndarray) -> np.ndarray:
         raise ValueError("Image has no contrast.")
 
     return (image - min_val) / (max_val - min_val)
+
 
 def invert_image(image: np.ndarray) -> np.ndarray:
     """Inverts the image.
@@ -257,7 +281,7 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
     max_r = min(center)
 
     canvas = np.zeros((h, w, 4), dtype=np.uint8)
-    
+
     theta = 0
     prev_pt = None
     black_pixel = (0, 0, 0, 255)
@@ -265,7 +289,7 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
     while True:
         # r = (theta / 2pi) * (max_r / count of lines)
         r = (theta / (2 * math.pi)) * (max_r / lines)
-        if r >= max_r: 
+        if r >= max_r:
             break
 
         x = int(center[0] + r * math.cos(theta))
@@ -276,7 +300,7 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
             continue
 
         thickness = int((255 - img[y, x]) / 50) + 1
-        
+
         if prev_pt:
             cv2.line(
                 canvas,
@@ -286,9 +310,8 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
                 thickness,
                 cv2.LINE_AA
             )
-        
+
         prev_pt = (x, y)
         theta += angle_step
 
     return canvas
-
