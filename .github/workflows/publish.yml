@@ -29,10 +29,14 @@ jobs:
           python -m build --sdist --wheel
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.6.0
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          set -e
+          python -m pip install --upgrade pip
+          pip install twine
+          python -m twine upload dist/*
 
       - name: Generate changelog for release
         id: changelog
