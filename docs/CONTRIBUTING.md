@@ -47,7 +47,6 @@ lumina/
 │   └── core/
 │       ├── image_service.py  # Image processing
 │       ├── stl_service.py    # STL generation
-│       ├── bitmap_service.py # Bitmap export
 │       └── shapes.py         # Shape strategies
 ├── tests/                    # Unit tests
 └── docs/                     # Documentation
