@@ -8,7 +8,7 @@ version = "0.1.0"
 authors = [
   { name="Ata Can Yaymacı", email="atacanymc@gmail.com" },
 ]
-description = "Lithophane, Spiral and Bitmap generator"
+description = "Lithophane & Spiral Betty Generator"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -21,7 +21,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Multimedia :: Graphics :: 3D Modeling",
 ]
-keywords = ["lithophane", "3d-printing", "spiral-betty", "bitmap", "stl", "maker", "gift"]
+keywords = ["lithophane", "3d-printing", "spiral-betty", "stl", "maker", "gift"]
 dependencies = [
     "numpy>=1.20.0",
     "opencv-python>=4.5.0",

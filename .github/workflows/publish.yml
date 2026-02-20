@@ -1,31 +1,61 @@
-name: Publish to PyPI
+name: Publish Python package
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  build-n-publish:
-    name: Build and publish to PyPI
+  build-and-publish:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-        
-    - name: Install pypa/build
-      run: >-
-        python3 -m pip install build --user
-        
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-      
-    - name: Publish distribution 📦 to PyPI
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install build requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build distributions
+        run: |
+          python -m build --sdist --wheel
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.6.0
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Generate changelog for release
+        id: changelog
+        run: |
+          # Ensure tags are present
+          git fetch --tags
+          # Try to get previous tag; if none, include all commits
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+          if [ -n "$PREV_TAG" ]; then
+            git log --pretty=format:'- %s (%an)' "$PREV_TAG"..HEAD > changelog.md
+          else
+            git log --pretty=format:'- %s (%an)' > changelog.md
+          fi
+          # Write multi-line output safely
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          sed 's/^/ /' changelog.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}

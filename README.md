@@ -102,3 +102,64 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 Made with ❤️ for the maker community
+
+## 🧪 Continuous Integration (CI) & Local Checks
+
+This repository includes GitHub Actions workflows and pre-commit hooks to keep code quality high and releases reproducible.
+
+- CI workflow: `.github/workflows/python-ci.yml`
+  - Runs on pushes and PRs to `main`/`master`.
+  - Matrix: Python 3.10, 3.11, 3.12.
+  - Installs dependencies from `requirements.txt`, runs `ruff` (lint), runs `pytest` with coverage and uploads `coverage.xml` to Codecov if `CODECOV_TOKEN` secret is set.
+
+- Publish workflow: `.github/workflows/publish.yml`
+  - Triggers on tags like `vX.Y.Z` and publishes wheels and sdist to PyPI using `PYPI_API_TOKEN` secret.
+
+- pre-commit config: `.pre-commit-config.yaml`
+  - Includes `black`, `ruff`, `isort` and common pre-commit hooks.
+
+Quick local setup
+
+1. Create and activate a virtualenv (recommended):
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install project dependencies:
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+3. Install pre-commit hooks (one-time):
+
+```bash
+pip install pre-commit
+pre-commit install
+# To run on all files once
+pre-commit run --all-files
+```
+
+4. Run tests and coverage locally:
+
+```bash
+pip install pytest pytest-cov
+pytest -q --cov=src --cov-report=xml:coverage.xml
+```
+
+Publishing to PyPI
+
+- To publish, create a git tag (`git tag vX.Y.Z && git push --tags`) and ensure repository secret `PYPI_API_TOKEN` is set (token created on PyPI).
+- The `publish.yml` workflow will build and publish the package.
+
+Secrets for CI
+
+- `PYPI_API_TOKEN`: required for automatic PyPI publishing.
+- `CODECOV_TOKEN` (optional): set this if you want Codecov upload to use a token (for private repos); for public repos Codecov sometimes works without it.
+
+If you want, I can also:
+- Add a Codecov badge to the top of the README once Codecov is configured.
+- Make `ruff` non-blocking in CI (current config fails CI on lint errors) if you'd prefer warnings instead.
