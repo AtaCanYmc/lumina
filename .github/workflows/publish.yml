@@ -79,17 +79,15 @@ jobs:
             git log --pretty=format:'- %s (%an)' > changelog.md || true
           fi
 
-          # Write multi-line output safely and robustly even if sed fails
+          # Write multi-line output safely: ensure EOF is always written
           if [ -f changelog.md ]; then
-            {
-              printf 'body<<EOF\n'
-              sed 's/^/ /' changelog.md || true
-              printf 'EOF\n'
-            } >> "$GITHUB_OUTPUT"
+            printf 'body<<EOF\n' >> "$GITHUB_OUTPUT"
+            sed 's/^/ /' changelog.md >> "$GITHUB_OUTPUT" || true
+            printf 'EOF\n' >> "$GITHUB_OUTPUT"
           else
-            echo "body<<EOF" >> "$GITHUB_OUTPUT"
-            echo " " >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
+            printf 'body<<EOF\n' >> "$GITHUB_OUTPUT"
+            printf '\n' >> "$GITHUB_OUTPUT"
+            printf 'EOF\n' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create GitHub Release
