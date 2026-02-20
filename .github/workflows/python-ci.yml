@@ -37,11 +37,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          # Install the package so tests can import `lumina`
+          pip install -e .
 
-      - name: Install and run pre-commit hooks (blocking)
+      - name: Install and run style checks (isort/black/ruff)
         run: |
-          pip install pre-commit
-          pre-commit run --all-files
+          python -m pip install --upgrade pip
+          pip install isort black ruff
+          # Run check-only versions so CI doesn't auto-fix files
+          isort --check-only .
+          black --check .
+          ruff check .
 
       - name: Lint with ruff (redundant check)
         run: |
@@ -53,13 +59,14 @@ jobs:
           CI: true
         run: |
           pip install coverage pytest pytest-cov
-          pytest -q --cov=src --cov-report=xml:coverage.xml
+          pytest -q --cov=lumina --cov-report=xml:coverage.xml
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-xml
+          name: coverage-xml-py${{ matrix.python-version }}-${{ github.run_id }}
           path: coverage.xml
+          overwrite: true
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
