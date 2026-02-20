@@ -11,3 +11,4 @@ assets/stl/**
 *.egg-info
 locale_*
 .pytest_cache/
+dist/
