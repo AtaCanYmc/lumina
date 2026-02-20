@@ -9,4 +9,5 @@ scripts/*.py
 assets/stl/**
 *.stl
 *.egg-info
-locale_*
+locale_
+.pytest_cache/
