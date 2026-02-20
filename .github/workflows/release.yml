@@ -55,12 +55,12 @@ jobs:
           set -e
           NEW_VERSION="${{ github.event.inputs.version }}"
           FILE=pyproject.toml
-          if ! grep -q '^version' "$FILE"; then
+          if ! grep -q '^\s*version' "$FILE"; then
             echo "pyproject.toml does not contain a version field" >&2
             exit 1
           fi
-          # replace version = "..."
-          perl -0777 -pe "s/^version\s*=\s*\"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][^\"]*)?\"/version = \"${NEW_VERSION}\"/m" -i "$FILE"
+          # replace version = "..." (allow optional leading whitespace)
+          perl -0777 -pe "s/^\s*version\s*=\s*\"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][^\"]*)?\"/version = \"${NEW_VERSION}\"/m" -i "$FILE"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add "$FILE"
