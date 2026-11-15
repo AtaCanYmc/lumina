@@ -32,7 +32,19 @@ fi
 
 # 2. Run PyInstaller
 echo "→ Running PyInstaller..."
-PYTHON_BIN="${PYTHON:-.venv/bin/python}"
+if [[ -n "${PYTHON:-}" ]]; then
+    PYTHON_BIN="${PYTHON}"
+elif [[ -f "${ROOT_DIR}/.venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON_BIN="python3"
+elif command -v python >/dev/null 2>&1; then
+    PYTHON_BIN="python"
+else
+    echo "Error: Python executable not found!" >&2
+    exit 1
+fi
+echo "Using Python: ${PYTHON_BIN}"
 "${PYTHON_BIN}" -m PyInstaller --noconfirm --clean "${SCRIPT_DIR}/Lumina.spec"
 
 APP_PATH="${ROOT_DIR}/dist/Lumina.app"
