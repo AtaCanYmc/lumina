@@ -26,7 +26,13 @@ Thank you for contributing to Lumina. This document outlines the development wor
 
 ## Development Setup
 
-Create a virtual environment and install dependencies in editable mode:
+Install development dependencies and the editable package:
+
+```bash
+make dev
+```
+
+Alternatively, configure manually:
 
 ```bash
 python -m venv .venv
@@ -50,22 +56,21 @@ pre-commit install
 All code must pass formatting and static analysis checks:
 
 ```bash
-# Check import sorting
-isort --check-only .
-
-# Check code formatting
-black --check .
-
-# Run linter
-ruff check .
+make lint
+# Or individually:
+# isort --check-only .
+# black --check .
+# ruff check .
 ```
 
 To automatically format files:
 
 ```bash
-isort .
-black .
-ruff check --fix .
+make format
+# Or individually:
+# isort .
+# black .
+# ruff check --fix .
 ```
 
 ### Running Tests
@@ -73,7 +78,8 @@ ruff check --fix .
 Execute the full test suite before committing:
 
 ```bash
-pytest
+make test
+# Or directly: pytest
 ```
 
 All 26 test assertions must pass without regressions.
@@ -99,6 +105,7 @@ lumina/
 │       └── common_utils.py    # Shared geometry and array utilities
 ├── tests/                     # Pytest test suite
 ├── LICENSE                    # MIT license
+├── Makefile                   # Build and development task automation
 ├── pyproject.toml             # Package specification and tool configuration
 └── README.md                  # Project overview and quick start
 ```
