@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.3.0...lumina-tools-v1.4.0) (2026-11-15)
+
+
+### Features
+
+* **docs:** add homebrew tap install command and hero package switcher ([fcabc42](https://github.com/AtaCanYmc/lumina/commit/fcabc42361fca9a4db77fedd04042cb7fc2c90e1))
+
+
+### Documentation
+
+* fix package name to lumina-tools and document pipx installation ([37754fb](https://github.com/AtaCanYmc/lumina/commit/37754fb37e07495b5dd8f9968f1f388b6b6f61b4))
+
 ## [1.3.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.2.0...lumina-tools-v1.3.0) (2026-11-15)
 
 
