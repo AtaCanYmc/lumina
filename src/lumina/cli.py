@@ -4,7 +4,13 @@ import time
 import click
 import cv2
 
-from lumina import __version__, flat_lithophane, generate_spiral_betty_png
+from lumina import (
+    __version__,
+    flat_lithophane,
+    generate_spiral_betty_png,
+    get_mesh_stats,
+    open_viewer,
+)
 
 BANNER = """
   __                     _
@@ -118,6 +124,13 @@ def cli(ctx: click.Context):
     default=False,
     help="Normalize image before processing.",
 )
+@click.option(
+    "--preview",
+    "-p",
+    is_flag=True,
+    default=False,
+    help="Launch 3D WebGL viewport in browser upon completion.",
+)
 def flat(
     input_path: str,
     output: str | None,
@@ -131,6 +144,7 @@ def flat(
     shape: str,
     enhance: bool,
     normalize: bool,
+    preview: bool,
 ):
     """Generates a flat lithophane STL from an image.
 
@@ -173,7 +187,9 @@ def flat(
 
         elapsed = time.perf_counter() - start_time
         file_size = os.path.getsize(output) if os.path.exists(output) else 0
-        triangle_count = len(mesh_obj.vectors)
+        stats = get_mesh_stats(mesh_obj)
+        triangle_count = stats["facets"]
+        weight_str = f"{stats['weight_grams']} g (PLA)"
 
         click.secho(f"\nSuccess! STL saved to: {output}", fg="green", bold=True)
         summary_rows = [
@@ -184,11 +200,45 @@ def flat(
             ("Shape", shape),
             ("Resolution", f"{resolution} px/mm"),
             ("Triangles", f"{triangle_count:,} facets"),
+            ("Est. Weight", weight_str),
             ("File Size", format_bytes(file_size)),
             ("Time Elapsed", format_duration(elapsed)),
         ]
         click.echo(render_box("Lumina Lithophane Summary", summary_rows))
 
+        if preview:
+            click.secho("\nLaunching 3D interactive viewport in browser...", fg="cyan")
+            open_viewer(output)
+
+    except Exception as e:
+        raise click.ClickException(str(e)) from e
+
+
+@cli.command(
+    "view", short_help="Interactive 3D WebGL viewport and backlight simulation."
+)
+@click.argument("stl_path", type=click.Path(exists=True, dir_okay=False))
+@click.option("--output", "-o", default=None, help="Save standalone HTML viewer file.")
+@click.option(
+    "--no-browser",
+    is_flag=True,
+    default=False,
+    help="Do not open default browser automatically.",
+)
+def view(stl_path: str, output: str | None, no_browser: bool):
+    """Interactive 3D WebGL viewport and physical backlight simulation.
+
+    Inspect any 3D STL lithophane model, rotate/pan/zoom in 3D, toggle
+    wireframe, solid, or simulated backlight translucency with adjustable
+    color temperature.
+    """
+    try:
+        html_path = open_viewer(
+            stl_path=stl_path,
+            output_html=output,
+            open_browser=not no_browser,
+        )
+        click.secho(f"3D Viewport HTML ready at: {html_path}", fg="green", bold=True)
     except Exception as e:
         raise click.ClickException(str(e)) from e
 
@@ -315,6 +365,7 @@ def interactive(ctx: click.Context):
             shape=shape,
             enhance=enhance,
             normalize=normalize,
+            preview=False,
         )
     else:
         click.secho("\n─── Spiral Art Settings ───", dim=True)

@@ -149,8 +149,11 @@ The package provides the `lumina` console command as well as module execution vi
 # Launch the step-by-step interactive wizard
 lumina interactive
 
-# Generate a circular lithophane STL
-lumina flat photo.jpg --shape circle --width 120 --output circle_litho.stl
+# Generate a circular lithophane STL with 3D browser preview
+lumina flat photo.jpg --shape circle --width 120 --preview
+
+# Inspect any STL in interactive 3D WebGL viewport with backlight simulation
+lumina view circle_litho.stl
 
 # Generate a Spiral Betty PNG
 lumina spiral portrait.jpg --radius 100 --lines 40 --output spiral_art.png

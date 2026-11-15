@@ -46,14 +46,15 @@ Goal: Deliver a standalone macOS desktop application (`.app` bundle) wrapping th
 
 Goal: Allow users to preview and inspect the 3D model and its physical light-transmission behavior before exporting.
 
-- [ ] **Integrated 3D Mesh Viewport**:
-  - Interactive OpenGL or WebKit 3D canvas (rotate, pan, zoom).
-  - Wireframe and solid shading display modes.
-  - Real-time mesh statistics: Vertex count, facet count, and estimated physical weight in grams.
-- [ ] **Backlight Transmission Shader**:
-  - Physical lighting simulation showing how the lithophane will appear when illuminated from behind.
-  - Adjustable light color temperature (warm white, cool white, natural).
-  - Dynamic thickness-to-opacity absorption preview.
+- [x] **Integrated 3D Mesh Viewport**:
+  - Interactive WebGL/Three.js 3D canvas (rotate, pan, zoom, auto-rotate, viewport snapshot).
+  - Wireframe, solid matte shading, and physical backlit display modes.
+  - Real-time mesh statistics: Dimensions, facet count, thickness range, and estimated physical PLA weight in grams.
+  - Drag-and-drop support for any STL file with instant standalone browser preview.
+- [x] **Backlight Transmission Shader**:
+  - Physical lighting simulation showing how the lithophane appears when illuminated from behind (Beer-Lambert absorption model).
+  - Adjustable light color temperature (Warm White 2700K, Neutral 4000K, Cool White 6500K).
+  - Dynamic thickness-to-opacity absorption contrast, distance, and intensity sliders.
 
 ---
 

@@ -9,10 +9,12 @@ Lumina provides a command-line interface for generating lithophane 3D meshes and
 - [Commands](#commands)
   - [`lumina flat`](#lumina-flat)
   - [`lumina spiral`](#lumina-spiral)
+  - [`lumina view`](#lumina-view)
   - [`lumina interactive`](#interactive-wizard)
 - [Command Reference and Options](#command-reference-and-options)
   - [Options for `flat`](#options-for-flat)
   - [Options for `spiral`](#options-for-spiral)
+  - [Options for `view`](#options-for-view)
 - [Examples](#examples)
 
 ## Invocation
@@ -77,6 +79,24 @@ lumina flat [OPTIONS] INPUT_PATH
 | `--shape` | | `rect` | Boundary geometry: `rect`, `circle`, `heart`. |
 | `--enhance / --no-enhance` | | `False` | Apply contrast enhancement before meshing. |
 | `--normalize / --no-normalize` | | `False` | Normalize grayscale levels across dynamic range before processing. |
+| `--preview` | `-p` | `False` | Launch 3D WebGL viewport in browser upon completion. |
+
+---
+
+### `lumina view`
+
+Launches an interactive 3D WebGL viewport with real-time physical backlight simulation for an STL model.
+
+```bash
+lumina view [OPTIONS] STL_PATH
+```
+
+#### Options for `view`
+
+| Option | Short | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--output` | `-o` | `None` | Save the generated standalone HTML viewer file. |
+| `--no-browser` | | `False` | Generate the HTML without opening the default web browser. |
 
 ---
 

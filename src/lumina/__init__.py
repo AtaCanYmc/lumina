@@ -12,6 +12,16 @@ from .core.image_service import (
     to_spiral,
 )
 from .core.stl_service import image_to_flat_stl
+from .core.viewer import generate_viewer_html, get_mesh_stats, open_viewer
+
+__all__ = [
+    "__version__",
+    "flat_lithophane",
+    "generate_spiral_betty_png",
+    "generate_viewer_html",
+    "get_mesh_stats",
+    "open_viewer",
+]
 
 
 def flat_lithophane(
