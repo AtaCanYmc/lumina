@@ -35,6 +35,9 @@ dependencies = [
 [project.scripts]
 lumina = "lumina.cli:main"
 
+[tool.setuptools.package-data]
+lumina = ["templates/*.html"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py310"
