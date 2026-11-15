@@ -57,13 +57,19 @@ flowchart TD
 
 ## Installation
 
-Install the package from PyPI:
+### Via Homebrew (macOS)
+
+```bash
+brew install AtaCanYmc/tap/lumina
+```
+
+### Via PyPI
 
 ```bash
 pip install lumina-tools
 ```
 
-Or install from source in editable mode:
+### From Source
 
 ```bash
 git clone https://github.com/AtaCanYmc/lumina.git
