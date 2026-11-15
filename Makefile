@@ -1,4 +1,4 @@
-.PHONY: help install dev test lint format clean build
+.PHONY: help install dev test lint format clean build _ensure_pip
 
 PYTHON ?= $(shell which python3 2>/dev/null || which python 2>/dev/null || echo python3)
 PIP ?= $(PYTHON) -m pip
@@ -15,11 +15,14 @@ help:
 	@echo "  clean      Remove build artifacts, caches, and bytecode"
 	@echo "  build      Build source distribution and wheel"
 
-install:
+_ensure_pip:
+	@$(PYTHON) -m pip --version >/dev/null 2>&1 || $(PYTHON) -m ensurepip --upgrade >/dev/null 2>&1 || true
+
+install: _ensure_pip
 	$(PIP) install -r requirements.txt
 	$(PIP) install .
 
-dev:
+dev: _ensure_pip
 	$(PIP) install -r requirements.txt
 	$(PIP) install -e .
 	$(PIP) install pytest pytest-cov ruff black isort pre-commit build twine
