@@ -1,7 +1,7 @@
 .PHONY: help install dev test lint format clean build
 
-PYTHON ?= python3
-PIP ?= pip
+PYTHON ?= $(shell which python3 2>/dev/null || which python 2>/dev/null || echo python3)
+PIP ?= $(PYTHON) -m pip
 
 help:
 	@echo "Usage: make [target]"
@@ -25,17 +25,17 @@ dev:
 	$(PIP) install pytest pytest-cov ruff black isort pre-commit build twine
 
 test:
-	pytest
+	$(PYTHON) -m pytest
 
 lint:
-	isort --check-only .
-	black --check .
-	ruff check .
+	$(PYTHON) -m isort --check-only .
+	$(PYTHON) -m black --check .
+	$(PYTHON) -m ruff check .
 
 format:
-	isort .
-	black .
-	ruff check --fix .
+	$(PYTHON) -m isort .
+	$(PYTHON) -m black .
+	$(PYTHON) -m ruff check --fix .
 
 clean:
 	rm -rf build/ dist/ *.egg-info .pytest_cache .coverage coverage.xml
