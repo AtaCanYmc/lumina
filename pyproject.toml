@@ -28,6 +28,9 @@ dependencies = [
     "click>=8.0.0"
 ]
 
+[project.optional-dependencies]
+gui = ["PySide6>=6.5.0"]
+
 [project.urls]
 "Homepage" = "https://github.com/AtaCanYmc/lumina"
 "Bug Tracker" = "https://github.com/AtaCanYmc/lumina/issues"

@@ -394,7 +394,26 @@ def interactive(ctx: click.Context):
         )
 
 
+@cli.command("gui", short_help="Launch Lumina Studio desktop graphical application.")
+def gui():
+    """Launch Lumina Studio desktop graphical application.
+
+    Provides a native GUI with drag-and-drop image import, dual tabs for
+    Lithophane 3D STL generation and Spiral Betty art, and 3D viewport integration.
+    """
+    try:
+        from lumina.gui.main import launch_gui
+    except ImportError as e:
+        raise click.ClickException(
+            "PySide6 is required to launch the GUI. "
+            'Install it using: pip install "lumina-tools[gui]" or pip install PySide6'
+        ) from e
+
+    launch_gui()
+
+
 cli.add_command(interactive, name="wizard")
+cli.add_command(gui, name="app")
 
 
 if __name__ == "__main__":

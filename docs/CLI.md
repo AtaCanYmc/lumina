@@ -10,6 +10,7 @@ Lumina provides a command-line interface for generating lithophane 3D meshes and
   - [`lumina flat`](#lumina-flat)
   - [`lumina spiral`](#lumina-spiral)
   - [`lumina view`](#lumina-view)
+  - [`lumina gui`](#lumina-gui)
   - [`lumina interactive`](#interactive-wizard)
 - [Command Reference and Options](#command-reference-and-options)
   - [Options for `flat`](#options-for-flat)
@@ -117,6 +118,25 @@ lumina spiral [OPTIONS] INPUT_PATH
 | `--resolution` | | `5` | Grid resolution in pixels per millimeter. |
 | `--lines` | | `30` | Number of concentric spiral rotations. |
 | `--angle-step` | | `0.05` | Angular increment in radians per step. |
+
+---
+
+### `lumina gui`
+
+Launches the Lumina Studio native PySide6 desktop graphical interface.
+
+```bash
+lumina gui
+# or shorthand alias:
+lumina app
+```
+
+Features:
+- Native drag-and-drop file ingestion zone with live thumbnail preview.
+- Dual-mode tabs: 3D Lithophane STL generator and Spiral Betty continuous line studio.
+- Live 2D boundary shape masking (`rect`, `circle`, `heart`).
+- One-click chaining: Pipe generated Spiral Betty raster into a 3D circular lithophane STL.
+- Integrated button to launch the WebGL 3D physical backlight simulation.
 
 ---
 

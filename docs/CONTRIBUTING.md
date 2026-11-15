@@ -82,14 +82,14 @@ make test
 # Or directly: pytest
 ```
 
-All 45 test assertions must pass without regressions.
+All 50 test assertions must pass without regressions.
 
 ## Project Architecture
 
 ```text
 lumina/
 ├── assets/
-│   └── images/readme/         # Documentation render assets
+│   └── images/readme/         # Documentation render assets (logo, sample lithophanes)
 ├── docs/                      # Technical documentation
 │   ├── API.md
 │   ├── CLI.md
@@ -102,6 +102,10 @@ lumina/
 │   │   ├── shapes.py          # Boundary masking strategies (rect, circle, heart)
 │   │   ├── stl_service.py     # Heightmap meshing and STL generation
 │   │   └── viewer.py          # 3D WebGL viewport and physical light simulation
+│   ├── gui/                   # PySide6 desktop GUI application
+│   │   ├── app.py             # Main window and dark theme stylesheet
+│   │   ├── main.py            # GUI entry point launcher
+│   │   └── widgets/           # Dropzone, LithophaneTab, SpiralTab
 │   ├── templates/
 │   │   └── viewer.html        # Standalone Three.js 3D viewer template
 │   └── utils/

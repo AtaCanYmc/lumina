@@ -27,13 +27,13 @@ This document outlines the architectural milestones and feature pipeline for Lum
 
 Goal: Deliver a standalone macOS desktop application (`.app` bundle) wrapping the Lumina core engine with an intuitive graphical user interface.
 
-- [ ] **Desktop GUI Foundation**:
+- [x] **Desktop GUI Foundation**:
   - Implement native file drag-and-drop zone for input images.
   - Interactive parameter controls: Width, Height, Min/Max Thickness, Resolution, and Frame Dimensions.
   - Shape selector dropdown (`rect`, `circle`, `heart`) with instantaneous 2D boundary preview.
-- [ ] **Dual Mode UI**:
-  - Tab 1: Lithophane Generator (STL Export).
-  - Tab 2: Spiral Betty Studio (PNG Export).
+- [x] **Dual Mode UI**:
+  - Tab 1: Lithophane Generator (STL Export, live statistics, 3D viewport launch).
+  - Tab 2: Spiral Betty Studio (PNG Export, radius/line sliders).
   - Single-click action to chain Spiral output into a Lithophane STL.
 - [ ] **Packaging and Distribution**:
   - Standalone macOS application bundle (`Lumina.app`) using PyInstaller / Briefcase.

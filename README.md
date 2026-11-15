@@ -171,7 +171,10 @@ The package provides the `lumina` console command as well as module execution vi
 ### CLI Commands
 
 ```bash
-# Launch the step-by-step interactive wizard
+# Launch Lumina Studio desktop graphical application
+lumina gui
+
+# Launch the step-by-step interactive CLI wizard
 lumina interactive
 
 # Generate a circular lithophane STL with 3D browser preview
