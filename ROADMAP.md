@@ -35,10 +35,10 @@ Goal: Deliver a standalone macOS desktop application (`.app` bundle) wrapping th
   - Tab 1: Lithophane Generator (STL Export, live statistics, 3D viewport launch).
   - Tab 2: Spiral Betty Studio (PNG Export, radius/line sliders).
   - Single-click action to chain Spiral output into a Lithophane STL.
-- [ ] **Packaging and Distribution**:
-  - Standalone macOS application bundle (`Lumina.app`) using PyInstaller / Briefcase.
-  - Apple Silicon (M-series) and Intel universal binary support.
-  - Zero terminal prerequisite for end users.
+- [x] **Packaging and Distribution**:
+  - Standalone macOS application bundle (`Lumina.app`) using PyInstaller and native `hdiutil` DMG packaging.
+  - Apple Silicon (M-series) and Intel support.
+  - Zero terminal prerequisite for end users (`dist/Lumina-1.1.0-macos.dmg`).
 
 ---
 

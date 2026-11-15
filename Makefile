@@ -1,4 +1,4 @@
-.PHONY: help install dev test lint format clean build _ensure_pip
+.PHONY: help install dev test lint format clean build _ensure_pip macos-app macos-dmg
 
 PYTHON ?= $(shell which python3 2>/dev/null || which python 2>/dev/null || echo python3)
 PIP ?= $(PYTHON) -m pip
@@ -47,3 +47,8 @@ clean:
 
 build: clean
 	$(PYTHON) -m build
+
+macos-app:
+	@PYTHON="$(PYTHON)" bash packaging/macos/build_dmg.sh
+
+macos-dmg: macos-app
