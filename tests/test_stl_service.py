@@ -38,7 +38,7 @@ def test_shape_mask_heart():
 def test_apply_shape_to_heightmap():
     heightmap = np.ones((100, 100)) * 10.0
     min_thickness = 1.0
-    shaped, mask = apply_shape_to_heightmap(heightmap, "circle", min_thickness)
+    shaped, _ = apply_shape_to_heightmap(heightmap, "circle", min_thickness)
 
     assert shaped.shape == heightmap.shape
     # Check that masked out areas have min_thickness

@@ -12,7 +12,6 @@ def cli():
 
     A CLI tool for generating lithophane STLs from images.
     """
-    pass
 
 
 @cli.command()
@@ -98,7 +97,7 @@ def flat(
         mesh_obj.save(output)
         click.echo(f"Success! STL saved to: {output}")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         click.echo(f"Error: {e}", err=True)
 
 
@@ -130,7 +129,7 @@ def spiral(input_path, output, radius, resolution, lines, angle_step):
         cv2.imwrite(output, result)
         click.echo(f"Success! Spiral art saved to: {output}")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         click.echo(f"Error: {e}", err=True)
 
 
