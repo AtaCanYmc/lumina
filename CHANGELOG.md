@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.2.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.1.0...lumina-tools-v1.2.0) (2026-11-15)
+
+
+### Features
+
+* **cli:** enhance terminal ui and add interactive wizard ([765728b](https://github.com/AtaCanYmc/lumina/commit/765728bc9561a1659f03d80ede9e34375f988de2))
+* **gui:** implement PySide6 desktop studio with drag-and-drop and dual-mode tabs ([c832dd9](https://github.com/AtaCanYmc/lumina/commit/c832dd965c91297758a0062e8bebdc7557b0e7d9))
+* **packaging:** add standalone macos .app and .dmg packaging workflow ([7fab108](https://github.com/AtaCanYmc/lumina/commit/7fab1086e96ad5134f66a4a18324c651ba1f1795))
+* **viewer:** implement real-time 3d viewport and backlight transmission simulation ([59b456e](https://github.com/AtaCanYmc/lumina/commit/59b456ea1fbf36c4d145dbb98627fecf26bbdf43))
+
+
+### Bug Fixes
+
+* **build:** auto-bootstrap pip in venv if missing ([30ddf44](https://github.com/AtaCanYmc/lumina/commit/30ddf444bb88dfd24d5dfe8ced92d021a1e99627))
+* **build:** resolve pip command not found in Makefile using python module invocation ([d16bf99](https://github.com/AtaCanYmc/lumina/commit/d16bf9906d69c88952c1d517af9df7daea907663))
+* **deps:** remove conflicting stl package shadowing numpy-stl ([3d26142](https://github.com/AtaCanYmc/lumina/commit/3d26142ba2e0671f398e42b85a1aa2d1e2db9eba))
+
+
+### Documentation
+
+* add vector logo banner to README header ([7a480c9](https://github.com/AtaCanYmc/lumina/commit/7a480c943942feb41f8448bc9f6c95feab4d5cb9))
+* **readme:** add desktop studio and 3d viewport screenshots ([2b08bbe](https://github.com/AtaCanYmc/lumina/commit/2b08bbeb51d633c9a0c3401642a10f84a4da44c1))
+* replace banner with minimalist square vector logo mark ([64c9eb9](https://github.com/AtaCanYmc/lumina/commit/64c9eb97858b5dca57899594def6ddc550019f22))
+* update API, architecture, and quick start references for 3d viewer ([5ee7be3](https://github.com/AtaCanYmc/lumina/commit/5ee7be37744428a6fbb4f0f4930d73ed8952c7cf))
+
 ## [1.1.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.0.0...lumina-tools-v1.1.0) (2026-11-15)
 
 
