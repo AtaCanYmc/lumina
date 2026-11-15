@@ -1,11 +1,19 @@
-# Lumina
+<p align="center">
+  <img src="assets/images/readme/logo.svg" alt="Lumina Banner" width="100%">
+</p>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/pypi/v/lumina-tools.svg)](https://pypi.org/project/lumina-tools/)
-[![CI](https://github.com/AtaCanYmc/lumina/actions/workflows/python-ci.yml/badge.svg)](https://github.com/AtaCanYmc/lumina/actions/workflows/python-ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
+  <a href="https://pypi.org/project/lumina-tools/"><img src="https://img.shields.io/pypi/v/lumina-tools.svg" alt="PyPI"></a>
+  <a href="https://github.com/AtaCanYmc/lumina/actions/workflows/python-ci.yml"><img src="https://github.com/AtaCanYmc/lumina/actions/workflows/python-ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</p>
 
-Lumina converts 2D raster images into 3D-printable lithophane STL meshes and Spiral Betty vector or raster art. It provides both a Python API and a command-line interface.
+<p align="center">
+  <strong>Lumina converts 2D raster images into 3D-printable lithophane STL meshes, Spiral Betty vector patterns, and interactive WebGL physical light simulations.</strong>
+</p>
+
+---
 
 ## Table of Contents
 
