@@ -108,6 +108,7 @@ lumina/
 ├── Makefile                   # Build and development task automation
 ├── pyproject.toml             # Package specification and tool configuration
 ├── README.md                  # Project overview and quick start
+├── ROADMAP.md                 # Project milestones and feature pipeline
 └── SECURITY.md                # Vulnerability disclosure policy
 ```
 

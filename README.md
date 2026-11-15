@@ -223,6 +223,7 @@ ruff check .
 - [Python API Reference](docs/API.md): Function parameters, types, and return values.
 - [CLI Reference](docs/CLI.md): Terminal usage, commands, and options.
 - [Contributing Guide](docs/CONTRIBUTING.md): Branching, commit standards, and pull request workflow.
+- [Project Roadmap](ROADMAP.md): Milestones, macOS desktop application architecture, and feature pipeline.
 - [Security Policy](SECURITY.md): Vulnerability reporting procedures and SLA.
 
 ## License
