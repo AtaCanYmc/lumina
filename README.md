@@ -27,6 +27,7 @@
   - [Generate Spiral Betty Art](#generate-spiral-betty-art)
   - [Chaining Spiral Art into a Lithophane Mesh](#chaining-spiral-art-into-a-lithophane-mesh)
   - [Interactive 3D Viewport and Backlight Simulation](#interactive-3d-viewport-and-backlight-simulation)
+- [Lumina Studio (Desktop GUI)](#lumina-studio-desktop-gui)
 - [Command-Line Interface (CLI)](#command-line-interface-cli)
   - [CLI Commands](#cli-commands)
   - [CLI Flags Reference](#cli-flags-reference)
@@ -42,6 +43,7 @@
 | Flat and Shaped Lithophanes | Converts image grayscale intensity into variable Z-height geometry with boundary framing | Binary `.stl` mesh |
 | Spiral Betty Generator | Samples image brightness along Archimedean spiral paths with modulated line thickness | Grayscale `.png` image |
 | 3D Viewport & Light Simulation | WebGL Three.js viewport simulating real-world backlight transmission with adjustable color temperature | Standalone `.html` / Browser |
+| Lumina Studio Desktop GUI | Native PySide6 interface with drag-and-drop, dual tabs, and one-click chaining | Desktop Application |
 
 <p align="center">
   <img src="assets/images/readme/slicer.png" alt="Classic Lithophane in Slicer" width="800">
@@ -161,6 +163,25 @@ from lumina import open_viewer
 # Render and open interactive 3D simulation in your browser
 open_viewer("lithophane.stl")
 ```
+
+<p align="center">
+  <img src="assets/images/viewport.png" alt="Lumina 3D WebGL Viewport and Backlight Simulation" width="800">
+</p>
+
+---
+
+## Lumina Studio (Desktop GUI)
+
+Lumina Studio provides a native desktop interface featuring drag-and-drop file ingestion, dual-mode tabs (Lithophane 3D STL & Spiral Betty), live boundary shape masking, and direct 3D viewport launching:
+
+```bash
+# Launch the desktop studio
+lumina gui
+```
+
+<p align="center">
+  <img src="assets/images/desktop.png" alt="Lumina Studio Desktop Application" width="800">
+</p>
 
 ---
 
