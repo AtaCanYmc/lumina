@@ -51,14 +51,18 @@ mkdir -p "${DMG_STAGING}"
 cp -R "${APP_PATH}" "${DMG_STAGING}/"
 ln -s /Applications "${DMG_STAGING}/Applications"
 
-DMG_OUTPUT="${ROOT_DIR}/dist/Lumina-1.1.0-macos.dmg"
-rm -f "${DMG_OUTPUT}"
+VERSION="$("${PYTHON_BIN}" -c "import sys; sys.path.insert(0, 'src'); from lumina import __version__; print(__version__)")"
+DMG_OUTPUT="${ROOT_DIR}/dist/Lumina-${VERSION}-macos.dmg"
+DMG_EVERGREEN="${ROOT_DIR}/dist/Lumina-macos.dmg"
+rm -f "${DMG_OUTPUT}" "${DMG_EVERGREEN}"
 
 hdiutil create -volname "Lumina Studio" \
     -srcfolder "${DMG_STAGING}" \
     -ov -format UDZO \
     "${DMG_OUTPUT}"
 
+cp "${DMG_OUTPUT}" "${DMG_EVERGREEN}"
 rm -rf "${DMG_STAGING}"
 echo "✓ DMG created successfully: ${DMG_OUTPUT}"
-ls -lh "${DMG_OUTPUT}"
+echo "✓ Evergreen DMG created: ${DMG_EVERGREEN}"
+ls -lh "${DMG_OUTPUT}" "${DMG_EVERGREEN}"

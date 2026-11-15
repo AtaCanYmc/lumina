@@ -9,6 +9,10 @@ block_cipher = None
 SPEC_DIR = os.path.abspath(SPECPATH)
 PROJECT_ROOT = os.path.abspath(os.path.join(SPEC_DIR, "..", ".."))
 
+# Dynamically extract version from package
+sys.path.insert(0, os.path.join(PROJECT_ROOT, "src"))
+from lumina import __version__ as APP_VERSION
+
 datas = [
     (os.path.join(PROJECT_ROOT, "src", "lumina", "templates"), os.path.join("lumina", "templates")),
 ]
@@ -79,8 +83,8 @@ app = BUNDLE(
         "CFBundleName": "Lumina",
         "CFBundleDisplayName": "Lumina Studio",
         "CFBundleIdentifier": "com.atacan.lumina",
-        "CFBundleVersion": "1.1.0",
-        "CFBundleShortVersionString": "1.1.0",
+        "CFBundleVersion": APP_VERSION,
+        "CFBundleShortVersionString": APP_VERSION,
         "NSHighResolutionCapable": True,
         "LSMinimumSystemVersion": "12.0",
         "NSRequiresAquaSystemAppearance": False,

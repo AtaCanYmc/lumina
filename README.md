@@ -8,7 +8,7 @@
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
   <a href="https://pypi.org/project/lumina-tools/"><img src="https://img.shields.io/pypi/v/lumina-tools.svg" alt="PyPI"></a>
   <a href="https://github.com/AtaCanYmc/lumina/actions/workflows/ci.yml"><img src="https://github.com/AtaCanYmc/lumina/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/AtaCanYmc/lumina/releases/latest/download/Lumina-1.1.0-macos.dmg"><img src="https://img.shields.io/badge/macOS-Standalone%20App%20(.dmg)-blue.svg" alt="macOS DMG"></a>
+  <a href="https://github.com/AtaCanYmc/lumina/releases/latest/download/Lumina-macos.dmg"><img src="https://img.shields.io/badge/macOS-Standalone%20App%20(.dmg)-blue.svg" alt="macOS DMG"></a>
   <a href="https://atacanymc.github.io/lumina/"><img src="https://img.shields.io/badge/Web%20Showcase-Live%20Demo-amber.svg" alt="Web Showcase"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
@@ -89,7 +89,7 @@ flowchart TD
 
 For zero-terminal installation on macOS (Apple Silicon M-series and Intel Universal):
 
-1. Download the latest installer: [Lumina-1.1.0-macos.dmg](https://github.com/AtaCanYmc/lumina/releases/latest/download/Lumina-1.1.0-macos.dmg).
+1. Download the latest installer: [Lumina-macos.dmg](https://github.com/AtaCanYmc/lumina/releases/latest/download/Lumina-macos.dmg).
 2. Open the disk image and drag **Lumina.app** to your `/Applications` directory.
 3. Launch Lumina Studio directly from Spotlight or Launchpad.
 
