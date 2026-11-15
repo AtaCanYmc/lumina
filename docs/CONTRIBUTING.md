@@ -1,86 +1,144 @@
 # Contributing to Lumina
 
-Thank you for your interest in contributing to Lumina! 🎉
+Thank you for contributing to Lumina. This document outlines the development workflow, code standards, and pull request verification requirements.
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Development Setup](#development-setup)
+- [Code Quality and Style](#code-quality-and-style)
+- [Project Architecture](#project-architecture)
+- [Commit Message Specification](#commit-message-specification)
+- [Pull Request Checklist](#pull-request-checklist)
 
 ## Getting Started
 
-1. **Fork** the repository
-2. **Clone** your fork:
+1. Fork the repository on GitHub.
+2. Clone your fork locally:
    ```bash
    git clone https://github.com/AtaCanYmc/lumina.git
    cd lumina
    ```
-3. **Install** in development mode:
+3. Set upstream remote:
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install -e .
-   pip install pytest ruff
+   git remote add upstream https://github.com/AtaCanYmc/lumina.git
    ```
 
-## Development Workflow
+## Development Setup
+
+Create a virtual environment and install dependencies in editable mode:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install -e .
+pip install pytest ruff black isort pre-commit
+```
+
+Install the Git pre-commit hooks:
+
+```bash
+pre-commit install
+```
+
+## Code Quality and Style
+
+### Formatting and Linting
+
+All code must pass formatting and static analysis checks:
+
+```bash
+# Check import sorting
+isort --check-only .
+
+# Check code formatting
+black --check .
+
+# Run linter
+ruff check .
+```
+
+To automatically format files:
+
+```bash
+isort .
+black .
+ruff check --fix .
+```
 
 ### Running Tests
+
+Execute the full test suite before committing:
 
 ```bash
 pytest
 ```
 
-All tests must pass before submitting a PR.
+All 26 test assertions must pass without regressions.
 
-### Code Style
+## Project Architecture
 
-We use [Ruff](https://github.com/astral-sh/ruff) for linting:
-
-```bash
-ruff check .
-ruff check --fix .  # Auto-fix issues
-```
-
-### Project Structure
-
-```
+```text
 lumina/
+├── assets/
+│   └── images/readme/         # Documentation render assets
+├── docs/                      # Technical documentation
+│   ├── API.md
+│   ├── CLI.md
+│   └── CONTRIBUTING.md
 ├── src/lumina/
-│   ├── __init__.py          # Main API functions
-│   ├── cli.py                # CLI commands
-│   └── core/
-│       ├── image_service.py  # Image processing
-│       ├── stl_service.py    # STL generation
-│       └── shapes.py         # Shape strategies
-├── tests/                    # Unit tests
-└── docs/                     # Documentation
+│   ├── __init__.py            # Public package exports
+│   ├── cli.py                 # Click CLI commands and entry points
+│   ├── core/
+│   │   ├── image_service.py   # Resizing, contrast enhancement, spiral algorithms
+│   │   ├── shapes.py          # Boundary masking strategies (rect, circle, heart)
+│   │   └── stl_service.py     # Heightmap meshing and STL generation
+│   └── utils/
+│       └── common_utils.py    # Shared geometry and array utilities
+├── tests/                     # Pytest test suite
+├── LICENSE                    # MIT license
+├── pyproject.toml             # Package specification and tool configuration
+└── README.md                  # Project overview and quick start
 ```
 
-## Submitting Changes
+## Commit Message Specification
 
-1. Create a **feature branch**:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+Lumina enforces the [Conventional Commits](https://www.conventionalcommits.org/) standard. Commit messages must follow the format:
 
-2. Make your changes and **commit**:
-   ```bash
-   git commit -m "Add: your feature description"
-   ```
+```text
+<type>(<scope>): <subject>
+```
 
-3. **Push** to your fork:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+### Allowed Types
 
-4. Open a **Pull Request** on GitHub
+| Type | Description |
+| :--- | :--- |
+| `feat` | New feature or capability |
+| `fix` | Bug fix |
+| `docs` | Documentation changes |
+| `style` | Formatting, missing semi-colons, no code logic change |
+| `refactor` | Code restructuring without changing external behavior |
+| `perf` | Code change improving execution performance |
+| `test` | Adding missing tests or correcting existing tests |
+| `build` | Changes to build system or package manifests |
+| `ci` | Changes to CI configuration files and scripts |
+| `chore` | Routine repository maintenance |
 
-## Commit Message Guidelines
+### Examples
 
-- `Add:` New feature
-- `Fix:` Bug fix
-- `Docs:` Documentation changes
-- `Refactor:` Code refactoring
-- `Test:` Adding or updating tests
+- `feat(shapes): add star-shaped lithophane border strategy`
+- `fix(cli): handle non-zero frame border offset calculations`
+- `docs(readme): add technical FAQ and slicer print recommendations`
 
-## Questions?
+## Pull Request Checklist
 
-Open an issue or reach out to the maintainers.
+Before submitting your pull request, verify:
 
-Thank you for contributing! 🚀
+1. A dedicated feature branch was created (`git checkout -b feat/your-feature`).
+2. All unit tests pass locally (`pytest`).
+3. Code formatting conforms to repository style (`isort --check-only .`, `black --check .`, `ruff check .`).
+4. Commit history follows Conventional Commits.
+5. New functionality is covered by unit tests in `tests/`.
+6. Relevant documentation in `docs/` or `README.md` is updated.

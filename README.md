@@ -1,31 +1,69 @@
-# 🌟 Lumina
+# Lumina
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI](https://img.shields.io/pypi/v/lumina-tools.svg)](https://pypi.org/project/lumina-tools/)
+[![CI](https://github.com/AtaCanYmc/lumina/actions/workflows/python-ci.yml/badge.svg)](https://github.com/AtaCanYmc/lumina/actions/workflows/python-ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-24%20passed-brightgreen.svg)]()
 
-**Lumina** is a powerful Python toolkit for makers, artists, and 3D printing enthusiasts. Transform your images into stunning physical art pieces.
+Lumina converts 2D raster images into 3D-printable lithophane STL meshes and Spiral Betty vector or raster art. It provides both a Python API and a command-line interface.
 
-## ✨ What Can You Create?
+## Table of Contents
 
-| Feature | Description | Output |
-|---------|-------------|--------|
-| 🖼️ **Lithophanes** | 3D-printable light art | `.stl` mesh |
-| 🌀 **Spiral Betty** | Spiral art for laser/CNC engraving | `.png` image |
+- [Overview and Output Types](#overview-and-output-types)
+- [Architecture Pipeline](#architecture-pipeline)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [Create a Flat or Shaped Lithophane](#create-a-flat-or-shaped-lithophane)
+  - [Generate Spiral Betty Art](#generate-spiral-betty-art)
+  - [Chaining Spiral Art into a Lithophane Mesh](#chaining-spiral-art-into-a-lithophane-mesh)
+- [Command-Line Interface (CLI)](#command-line-interface-cli)
+  - [CLI Commands](#cli-commands)
+  - [CLI Flags Reference](#cli-flags-reference)
+- [Technical FAQ](#technical-faq)
+- [Development and Verification](#development-and-verification)
+- [Documentation](#documentation)
+- [License](#license)
+
+## Overview and Output Types
+
+| Feature | Description | Output Format |
+| :--- | :--- | :--- |
+| Flat and Shaped Lithophanes | Converts image grayscale intensity into variable Z-height geometry with boundary framing | Binary `.stl` mesh |
+| Spiral Betty Generator | Samples image brightness along Archimedean spiral paths with modulated line thickness | Grayscale `.png` image |
 
 <p align="center">
-  <img src="assets/images/readme/slicer.png" alt="Classic Litho Features Presentation" width="800">
+  <img src="assets/images/readme/slicer.png" alt="Classic Lithophane in Slicer" width="800">
 </p>
 
-## 🚀 Quick Start
+## Architecture Pipeline
 
-### Installation
+```mermaid
+flowchart TD
+    A["Input Image (JPG / PNG)"] --> B["Grayscale Normalization & Contrast"]
+    B --> C{"Output Target"}
+
+    C -->|"Lithophane STL"| D["Heightmap Generation"]
+    D --> E["Shape Masking (Rect / Circle / Heart)"]
+    E --> F["Frame Boundary Extrusion"]
+    F --> G["Mesh Grid Triangulation (numpy-stl)"]
+    G --> H["Export: .stl Mesh"]
+
+    C -->|"Spiral Art"| I["Archimedean Spiral Sampling"]
+    I --> J["Brightness-to-Stroke Modulation"]
+    J --> K["Export: .png Raster"]
+
+    K -.->|"Optional Chain"| A
+```
+
+## Installation
+
+Install the package from PyPI:
 
 ```bash
 pip install lumina-tools
 ```
 
-Or from source:
+Or install from source in editable mode:
 
 ```bash
 git clone https://github.com/AtaCanYmc/lumina.git
@@ -33,168 +71,159 @@ cd lumina
 pip install -e .
 ```
 
-### Create a Lithophane
+## Quick Start
+
+### Create a Flat or Shaped Lithophane
 
 ```python
 from lumina import flat_lithophane
 
 mesh = flat_lithophane(
-    "photo.jpg",
-    shape="heart",      # rect, circle, heart
-    width_mm=100,
-    max_thickness=3.0
+    image_path="photo.jpg",
+    shape="heart",  # rect, circle, heart
+    width_mm=100.0,
+    max_thickness=3.0,
+    min_thickness=0.5,
 )
 mesh.save("lithophane.stl")
 ```
 
 <p align="center">
-  <img src="assets/images/readme/classic.png" alt="Classic Litho Features Presentation" width="800">
+  <img src="assets/images/readme/classic.png" alt="Lithophane Render Example" width="800">
 </p>
 
-### Create Spiral Art
+### Generate Spiral Betty Art
 
 ```python
-from lumina import generate_spiral_betty_png
 import cv2
+from lumina import generate_spiral_betty_png
 
-spiral = generate_spiral_betty_png("portrait.jpg", radius_mm=50)
+spiral = generate_spiral_betty_png(
+    image_path="portrait.jpg",
+    radius_mm=50.0,
+    lines=30,
+)
 cv2.imwrite("spiral_art.png", spiral)
 ```
 
-### Spiral then Lithophane (chain example)
+### Chaining Spiral Art into a Lithophane Mesh
 
-You can chain the spiral generator and the lithophane generator: first produce a Spiral Betty PNG, then feed that PNG to `flat_lithophane` to create an STL.
+You can pipe the generated spiral image directly into `flat_lithophane` to generate a textured 3D lithophane model:
 
 ```python
-from lumina import generate_spiral_betty_png, flat_lithophane
 import cv2
+from lumina import flat_lithophane, generate_spiral_betty_png
 
-# 1) Generate a spiral PNG from an input image
-input_photo = "portrait.jpg"  # your source image
-spiral_png = "portrait_spiral.png"
-spiral_img = generate_spiral_betty_png(image_path=input_photo, radius_mm=50)
-cv2.imwrite(spiral_png, spiral_img)
+# 1. Generate the spiral raster image
+spiral_img = generate_spiral_betty_png("portrait.jpg", radius_mm=50.0, lines=35)
+cv2.imwrite("spiral_temp.png", spiral_img)
 
-# 2) Create a lithophane from the generated spiral PNG
+# 2. Convert the spiral raster into a 3D printable STL mesh
 mesh = flat_lithophane(
-    image_path=spiral_png,
-    shape="rect",
-    width_mm=100,
-    max_thickness=3.0,
-    min_thickness=0.5,
+    image_path="spiral_temp.png",
+    shape="circle",
+    width_mm=100.0,
+    max_thickness=2.8,
+    min_thickness=0.6,
 )
-mesh.save("portrait_spiral_lithophane.stl")
+mesh.save("spiral_lithophane.stl")
 ```
 
 <p align="center">
-  <img src="assets/images/readme/spiral.png" alt="Classic Litho Features Presentation" width="800">
+  <img src="assets/images/readme/spiral.png" alt="Spiral Betty Lithophane Example" width="800">
 </p>
 
-## 💻 CLI Usage
+## Command-Line Interface (CLI)
+
+The package provides the `lumina` console command as well as module execution via `python -m lumina.cli`.
+
+### CLI Commands
 
 ```bash
-# Lithophane
-python -m lumina.cli flat photo.jpg --shape circle --width 120
+# Generate a circular lithophane STL
+lumina flat photo.jpg --shape circle --width 120 --output circle_litho.stl
 
-# Spiral art
-python -m lumina.cli spiral portrait.jpg --radius 100 --lines 40
+# Generate a Spiral Betty PNG
+lumina spiral portrait.jpg --radius 100 --lines 40 --output spiral_art.png
 ```
 
-## 🎨 Features
+### CLI Flags Reference
 
-- **Multiple Shapes**: Rectangle, Circle, Heart
-- **Smart Framing**: Auto-generated shape-conforming frames
-- **True Mesh Cutting**: Clean edges without artifacts
-- **Flexible Output**: STL meshes, PNG images
-- **CLI & Python API**: Use from terminal or integrate into your projects
+#### `lumina flat`
 
-## 🧪 Continuous Integration (CI) & Local Checks (updated)
+| Flag | Short | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--output` | `-o` | `[input].stl` | Destination path for the generated STL file. |
+| `--width` | `-w` | `100.0` | Target width in millimeters. |
+| `--height` | `-h` | `150.0` | Target height in millimeters. |
+| `--max-thick` | | `3.0` | Maximum thickness in millimeters for darkest pixels. |
+| `--min-thick` | | `0.5` | Minimum thickness in millimeters for lightest pixels. |
+| `--frame-thick` | | `1.0` | Frame border width in millimeters. |
+| `--frame-height`| | `2.0` | Frame border height in millimeters. Set to `0` to match maximum relief height. |
+| `--resolution` | `-r` | `5` | Resolution in pixels per millimeter. |
+| `--shape` | | `rect` | Boundary geometry: `rect`, `circle`, `heart`. |
+| `--enhance / --no-enhance` | | `False` | Apply contrast enhancement before processing. |
+| `--normalize / --no-normalize` | | `False` | Normalize grayscale levels across dynamic range before processing. |
 
-This repository includes GitHub Actions workflows and `pre-commit` hooks to keep code quality high and releases reproducible. Below is the current, recommended workflow for local development and what CI enforces.
+#### `lumina spiral`
 
-What CI does now
+| Flag | Short | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--output` | `-o` | `[input]_spiral.png` | Destination path for the generated PNG image. |
+| `--radius` | `-r` | `100.0` | Spiral radius in millimeters. |
+| `--resolution` | | `5` | Resolution in pixels per millimeter. |
+| `--lines` | | `30` | Number of concentric spiral rotations. |
+| `--angle-step` | | `0.05` | Angular sampling increment in radians. |
 
-- Installs runtime dependencies and the package itself (editable) so tests can import `lumina`:
-  - `pip install -r requirements.txt` then `pip install -e .`
-- Runs style checks in *check-only* mode (so CI does not mutate files):
-  - `isort --check-only .`
-  - `black --check .`
-  - `ruff check .`
-- Runs `pytest` with coverage and uploads the generated `coverage.xml` artifact. The artifact name is generated per matrix job/run (to avoid 409 conflicts) and CI uploads to Codecov if configured.
+## Technical FAQ
 
-Why this matters
+### How does grayscale mapping determine physical thickness?
+Dark pixels map to `max_thickness` and white pixels map to `min_thickness`. When backlit, thicker regions absorb more light and appear dark, while thinner regions allow light transmission and appear bright.
 
-- CI no longer runs `pre-commit run --all-files` in a way that modifies files; instead it enforces that the repository is already formatted. Developers must run formatting locally and commit the results to avoid CI failures.
-- The workflow installs the package under test so tests won't fail with `ModuleNotFoundError: No module named 'lumina'`.
+### What slicer settings produce the best lithophane prints?
+Print lithophanes vertically aligned along the Y-axis rather than lying flat on the build plate. Set infill to 100% to avoid internal hollow grid patterns when backlit. Use a layer height of 0.12 mm or finer with white or natural PLA.
 
-Quick local setup (recommended)
+### How does resolution influence generation time and file size?
+The resolution parameter controls grid density in pixels per millimeter. Mesh vertex count scales quadratically with resolution. A value of 5 pixels per millimeter provides high fidelity without creating excessively large STL files.
 
-1. Create and activate a virtualenv:
+### Can custom frame dimensions be disabled?
+Yes. Setting `--frame-thick 0` generates a frameless mesh with edge-to-edge relief.
+
+## Development and Verification
+
+### Local Environment Setup
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-```
-
-2. Install dependencies and the package in editable mode:
-
-```bash
-pip install --upgrade pip
 pip install -r requirements.txt
 pip install -e .
 ```
 
-3. Install and use pre-commit hooks (one-time):
+### Running Tests
+
+Execute the automated test suite with `pytest`:
 
 ```bash
-pip install pre-commit
-pre-commit install
-# Apply hooks & auto-fixes locally
-pre-commit run --all-files
-# Stage and commit the changes made by hooks
-git add -A
-git commit -m "Apply pre-commit formatting"
+pytest
 ```
 
-4. Run tests & coverage locally:
+### Code Style and Formatting
+
+The repository enforces formatting via `isort`, `black`, and `ruff`:
 
 ```bash
-pip install pytest pytest-cov
-pytest -q --cov=lumina --cov-report=xml:coverage.xml
+isort --check-only .
+black --check .
+ruff check .
 ```
 
-Publishing to PyPI
+## Documentation
 
-- To publish, create a git tag (`git tag vX.Y.Z && git push --tags`) and ensure repository secret `PYPI_API_TOKEN` is set (token created on PyPI).
-- The `publish.yml` workflow builds sdist and wheel and publishes to PyPI.
+- [Python API Reference](docs/API.md): Function parameters, types, and return values.
+- [CLI Reference](docs/CLI.md): Terminal usage, commands, and options.
+- [Contributing Guide](docs/CONTRIBUTING.md): Branching, commit standards, and pull request workflow.
 
-Secrets for CI
+## License
 
-- `PYPI_API_TOKEN`: required for automatic PyPI publishing.
-- `CODECOV_TOKEN` (optional): set this if you want Codecov upload to use a token (for private repos); for public repos Codecov may work without it.
-
-Notes & recommendations
-
-- Run `pre-commit run --all-files` locally before pushing; CI will reject pushes that aren’t formatted.
-- If you prefer CI to be less strict about formatting, we can remove `--fix` from the `ruff` pre-commit hook or make lint checks non-blocking in CI. I can apply that change if you want.
-- Artifact uploads in CI are named uniquely per matrix job and set to `overwrite: true` to avoid `409 Conflict` when re-running or retrying jobs.
-
-If you want, I can also add a short `CONTRIBUTING.md` section that enforces pre-commit + explains required commit hooks for contributors.
-
-## 📖 Documentation
-
-- [CLI Reference](docs/CLI.md)
-- [Python API](docs/API.md)
-- [Contributing](docs/CONTRIBUTING.md)
-
-## 🤝 Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-Made with ❤️ for the maker community
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

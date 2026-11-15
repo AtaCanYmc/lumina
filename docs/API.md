@@ -1,12 +1,30 @@
 # Lumina Python API Documentation
 
-Lumina can be used as a Python library to programmatically generate lithophanes.
+Lumina provides programmatic interfaces to generate 3D lithophane meshes and Spiral Betty raster patterns.
+
+## Table of Contents
+
+- [`lumina.flat_lithophane`](#luminaflat_lithophane)
+  - [Function Signature](#function-signature)
+  - [Parameters](#parameters)
+  - [Returns](#returns)
+  - [Example](#example)
+- [`lumina.generate_spiral_betty_png`](#luminagenerate_spiral_betty_png)
+  - [Function Signature](#function-signature-1)
+  - [Parameters](#parameters-1)
+  - [Returns](#returns-1)
+  - [Example](#example-1)
+
+---
 
 ## `lumina.flat_lithophane`
 
-The main function for generating flat (and shaped) lithophanes.
+Generates a flat or shaped 3D-printable lithophane STL mesh from an input image.
+
+### Function Signature
 
 ```python
+from stl import mesh
 from lumina import flat_lithophane
 
 def flat_lithophane(
@@ -19,29 +37,30 @@ def flat_lithophane(
     frame_height_mm: float = 2.0,
     resolution: int = 5,
     enhance: bool = False,
-    shape: str = "rect"
+    normalize: bool = False,
+    shape: str = "rect",
 ) -> mesh.Mesh:
 ```
 
 ### Parameters
 
-- **`image_path`** (`str`): Path to the input image file.
-- **`width_mm`** (`float`, default `100.0`): Target width of the lithophane in millimeters.
-- **`height_mm`** (`float`, default `150.0`): Target height of the lithophane in millimeters.
-- **`max_thickness`** (`float`, default `3.0`): Maximum thickness in mm, corresponding to the blackest parts of the image.
-- **`min_thickness`** (`float`, default `0.5`): Minimum thickness in mm, corresponding to the whitest parts of the image.
-- **`frame_thick_mm`** (`float`, default `1.0`): The thickness (width) of the frame border in mm.
-- **`frame_height_mm`** (`float`, default `2.0`): The height of the frame border in mm. If `0`, it matches the maximum height of the image.
-- **`resolution`** (`int`, default `5`): Resolution in pixels per mm. Determines the detail level.
-- **`enhance`** (`bool`, default `False`): If `True`, applies contrast enhancement to the image before processing.
-- **`shape`** (`str`, default `"rect"`): The shape of the lithophane. Supported values:
-    - `"rect"`: Standard rectangular shape.
-    - `"circle"`: Circular shape.
-    - `"heart"`: Heart shape.
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `image_path` | `str` | *required* | Path to the source image file (`.jpg`, `.png`). |
+| `width_mm` | `float` | `100.0` | Target width of the lithophane in millimeters. |
+| `height_mm` | `float` | `150.0` | Target height of the lithophane in millimeters. |
+| `max_thickness` | `float` | `3.0` | Maximum thickness in millimeters, mapped to black pixels. |
+| `min_thickness` | `float` | `0.5` | Minimum thickness in millimeters, mapped to white pixels. |
+| `frame_thick_mm` | `float` | `1.0` | Width of the boundary frame border in millimeters. |
+| `frame_height_mm`| `float` | `2.0` | Height of the frame border in millimeters. If `0`, matches maximum relief height. |
+| `resolution` | `int` | `5` | Grid resolution in pixels per millimeter. |
+| `enhance` | `bool` | `False` | Apply contrast enhancement before meshing. |
+| `normalize` | `bool` | `False` | Normalize grayscale dynamic range before processing. |
+| `shape` | `str` | `"rect"` | Boundary geometry: `"rect"`, `"circle"`, `"heart"`. |
 
 ### Returns
 
-- **`mesh.Mesh`**: A `numpy-stl` mesh object representing the generated 3D model.
+- `stl.mesh.Mesh`: A `numpy-stl` mesh object representing the generated 3D geometry.
 
 ### Example
 
@@ -49,55 +68,68 @@ def flat_lithophane(
 from lumina import flat_lithophane
 
 # Generate a heart-shaped lithophane
-mesh = flat_lithophane(
-    image_path="path/to/image.jpg",
+mesh_obj = flat_lithophane(
+    image_path="portrait.jpg",
     shape="heart",
-    width_mm=100,
+    width_mm=120.0,
     max_thickness=3.0,
-    min_thickness=0.5
+    min_thickness=0.5,
+    enhance=True,
 )
 
-# Save the mesh
-mesh.save("my_heart_lithophane.stl")
+# Save binary STL file
+mesh_obj.save("portrait_heart.stl")
 ```
 
 ---
 
 ## `lumina.generate_spiral_betty_png`
 
-Generates a spiral betty (spiral art) image from an input image.
+Generates an Archimedean spiral art raster image where stroke width varies inversely with image brightness.
+
+### Function Signature
 
 ```python
+import numpy as np
 from lumina import generate_spiral_betty_png
 
 def generate_spiral_betty_png(
     image_path: str,
     radius_mm: float = 100.0,
     resolution: int = 5,
-    enhance: bool = False
+    lines: int = 30,
+    angle_step: float = 0.05,
 ) -> np.ndarray:
 ```
 
 ### Parameters
 
-- **`image_path`** (`str`): Path to the input image file.
-- **`radius_mm`** (`float`, default `100.0`): Target radius in mm.
-- **`resolution`** (`int`, default `5`): Resolution in pixels per mm.
-- **`enhance`** (`bool`, default `False`): Apply contrast enhancement before processing.
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `image_path` | `str` | *required* | Path to the input image file (`.jpg`, `.png`). |
+| `radius_mm` | `float` | `100.0` | Target radius in millimeters. |
+| `resolution` | `int` | `5` | Resolution in pixels per millimeter. |
+| `lines` | `int` | `30` | Number of spiral rotations from center to radius. |
+| `angle_step` | `float` | `0.05` | Angular sampling increment in radians. |
 
 ### Returns
 
-- **`np.ndarray`**: A grayscale image with the spiral art pattern.
+- `np.ndarray`: Grayscale NumPy array (`uint8`) containing the rendered spiral art pattern.
 
 ### Example
 
 ```python
-from lumina import generate_spiral_betty_png
 import cv2
+from lumina import generate_spiral_betty_png
 
-# Generate a spiral betty
-spiral = generate_spiral_betty_png("path/to/portrait.jpg", radius_mm=50)
+# Generate a Spiral Betty pattern
+spiral_image = generate_spiral_betty_png(
+    image_path="portrait.jpg",
+    radius_mm=75.0,
+    lines=45,
+    angle_step=0.03,
+)
 
-# Save the result
-cv2.imwrite("spiral_output.png", spiral)
+# Save result as PNG
+cv2.imwrite("portrait_spiral.png", spiral_image)
 ```

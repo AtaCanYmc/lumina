@@ -1,98 +1,110 @@
 # Lumina CLI Documentation
 
-Lumina provides a command-line interface (CLI) for generating lithophanes directly from your terminal.
+Lumina provides a command-line interface for generating lithophane 3D meshes and Spiral Betty raster patterns directly from the terminal.
 
-## Installation
+## Table of Contents
 
-Ensure `lumina` is installed in your environment:
+- [Invocation](#invocation)
+- [Commands](#commands)
+  - [`lumina flat`](#lumina-flat)
+  - [`lumina spiral`](#lumina-spiral)
+- [Command Reference and Options](#command-reference-and-options)
+  - [Options for `flat`](#options-for-flat)
+  - [Options for `spiral`](#options-for-spiral)
+- [Examples](#examples)
+
+## Invocation
+
+After installing `lumina-tools`, execute via the console script:
 
 ```bash
-pip install .
+lumina --help
 ```
 
-## Commands
-
-### `flat`
-
-Generates a flat lithophane STL from an image.
-
-**Usage:**
+Alternatively, run the module directly through Python:
 
 ```bash
-python -m lumina.cli flat [OPTIONS] INPUT_PATH
-```
-
-**Arguments:**
-
-- `INPUT_PATH`: Path to the source image file (e.g., `image.jpg`, `photo.png`).
-
-**Options:**
-
-| Option | Shorthand | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `--output` | `-o` | `[input].stl` | Path for the output STL file. |
-| `--width` | `-w` | `100.0` | Width of the lithophane in mm. |
-| `--height` | `-h` | `150.0` | Height of the lithophane in mm. |
-| `--max-thick` | | `3.0` | Maximum thickness (black areas) in mm. |
-| `--min-thick` | | `0.5` | Minimum thickness (white areas) in mm. |
-| `--frame-thick` | | `1.0` | Thickness of the frame border in mm. |
-| `--frame-height` | | `2.0` | Height of the frame border in mm. |
-| `--resolution` | `-r` | `5` | Resolution in pixels per mm. Higher values mean more detail but larger files. |
-| `--shape` | | `rect` | Shape of the output: `rect`, `circle`, `heart`. |
-| `--enhance` | | `False` | Enhance image contrast before processing. |
-
-### Examples
-
-**1. Basic Rectangular Lithophane**
-
-```bash
-python -m lumina.cli flat my_photo.jpg
-```
-
-**2. Circular Lithophane with Custom Frame**
-
-```bash
-python -m lumina.cli flat portrait.jpg --shape circle --width 120 --frame-thick 3 --frame-height 4
-```
-
-**3. Heart-Shaped Lithophane for Valentines**
-
-```bash
-python -m lumina.cli flat love.jpg --shape heart --enhance
+python -m lumina.cli --help
 ```
 
 ---
 
-### `spiral`
+## Commands
 
-Generates a spiral betty art image from a photo.
+### `lumina flat`
 
-**Usage:**
+Generates a flat or shaped lithophane STL mesh from a source image.
 
 ```bash
-python -m lumina.cli spiral [OPTIONS] INPUT_PATH
+lumina flat [OPTIONS] INPUT_PATH
 ```
 
-**Options:**
+#### Options for `flat`
 
-| Option | Default | Description |
-| :--- | :--- | :--- |
-| `--output`, `-o` | `[input]_spiral.png` | Output PNG file path. |
-| `--radius`, `-r` | `100.0` | Radius in mm. |
-| `--resolution` | `5` | Resolution in pixels per mm. |
-| `--lines` | `30` | Number of spiral lines. |
-| `--angle-step` | `0.05` | Angle step for the spiral. |
+| Option | Short | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--output` | `-o` | `[input].stl` | Path for the destination STL file. |
+| `--width` | `-w` | `100.0` | Target width in millimeters. |
+| `--height` | `-h` | `150.0` | Target height in millimeters. |
+| `--max-thick` | | `3.0` | Maximum thickness in mm for darkest pixels. |
+| `--min-thick` | | `0.5` | Minimum thickness in mm for lightest pixels. |
+| `--frame-thick` | | `1.0` | Border frame width in millimeters. |
+| `--frame-height` | | `2.0` | Border frame height in millimeters. Set to `0` to match maximum image relief. |
+| `--resolution` | `-r` | `5` | Grid resolution in pixels per millimeter. |
+| `--shape` | | `rect` | Boundary geometry: `rect`, `circle`, `heart`. |
+| `--enhance / --no-enhance` | | `False` | Apply contrast enhancement before meshing. |
+| `--normalize / --no-normalize` | | `False` | Normalize grayscale levels across dynamic range before processing. |
 
-**Examples:**
+---
 
-**1. Basic Spiral Art**
+### `lumina spiral`
+
+Generates a Spiral Betty raster pattern from a source image.
 
 ```bash
-python -m lumina.cli spiral portrait.jpg
+lumina spiral [OPTIONS] INPUT_PATH
 ```
 
-**2. High-Detail Spiral for Laser Engraving**
+#### Options for `spiral`
+
+| Option | Short | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--output` | `-o` | `[input]_spiral.png` | Destination PNG image file path. |
+| `--radius` | `-r` | `100.0` | Radius of the spiral boundary in millimeters. |
+| `--resolution` | | `5` | Grid resolution in pixels per millimeter. |
+| `--lines` | | `30` | Number of concentric spiral rotations. |
+| `--angle-step` | | `0.05` | Angular increment in radians per step. |
+
+---
+
+## Examples
+
+### 1. Basic Rectangular Lithophane
 
 ```bash
-python -m lumina.cli spiral photo.jpg --radius 150 --lines 60 --resolution 10
+lumina flat landscape.jpg
+```
+
+### 2. Circular Lithophane with Reinforced Frame
+
+```bash
+lumina flat portrait.jpg --shape circle --width 120.0 --frame-thick 3.0 --frame-height 4.0
+```
+
+### 3. Heart-Shaped Lithophane with Contrast Enhancement
+
+```bash
+lumina flat photo.jpg --shape heart --enhance --max-thick 3.2 --min-thick 0.6
+```
+
+### 4. Standard Spiral Betty Art
+
+```bash
+lumina spiral portrait.jpg --radius 80.0 --lines 35
+```
+
+### 5. High-Resolution Spiral for Laser Engraving
+
+```bash
+lumina spiral sketch.jpg --radius 150.0 --lines 60 --resolution 10 --angle-step 0.02
 ```
