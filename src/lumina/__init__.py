@@ -47,6 +47,24 @@ def flat_lithophane(
     Returns:
         mesh.Mesh: Generated STL mesh.
     """
+    if width_mm <= 0 or height_mm <= 0:
+        raise ValueError("width_mm and height_mm must be positive numbers.")
+    if resolution <= 0:
+        raise ValueError("resolution must be a positive number.")
+    if frame_thick_mm < 0:
+        raise ValueError("frame_thick_mm cannot be negative.")
+    if min_thickness < 0:
+        raise ValueError("min_thickness cannot be negative.")
+    if min_thickness >= max_thickness:
+        raise ValueError("min_thickness must be less than max_thickness.")
+    if frame_thick_mm > 0 and (
+        width_mm <= 2 * frame_thick_mm or height_mm <= 2 * frame_thick_mm
+    ):
+        raise ValueError(
+            f"Frame thickness ({frame_thick_mm} mm) is too large for image dimensions "
+            f"({width_mm}x{height_mm} mm). Inner area must be greater than zero."
+        )
+
     img = read_image(image_path, is_grayscale=True)
 
     if normalize:
@@ -93,6 +111,15 @@ def generate_spiral_betty_png(
     Returns:
         np.ndarray: Generated spiral betty.
     """
+    if radius_mm <= 0:
+        raise ValueError("radius_mm must be a positive number.")
+    if resolution <= 0:
+        raise ValueError("resolution must be a positive number.")
+    if lines <= 0:
+        raise ValueError("lines must be a positive integer.")
+    if angle_step <= 0:
+        raise ValueError("angle_step must be a positive number.")
+
     img = read_image(image_path, is_grayscale=True)
 
     img = resize_image(

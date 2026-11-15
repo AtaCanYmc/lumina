@@ -94,11 +94,15 @@ def flat(
             base, _ = os.path.splitext(input_path)
             output = f"{base}.stl"
 
+        output_dir = os.path.dirname(os.path.abspath(output))
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+
         mesh_obj.save(output)
         click.echo(f"Success! STL saved to: {output}")
 
-    except Exception as e:  # noqa: BLE001
-        click.echo(f"Error: {e}", err=True)
+    except Exception as e:
+        raise click.ClickException(str(e)) from e
 
 
 @cli.command()
@@ -126,11 +130,15 @@ def spiral(input_path, output, radius, resolution, lines, angle_step):
             base, _ = os.path.splitext(input_path)
             output = f"{base}_spiral.png"
 
+        output_dir = os.path.dirname(os.path.abspath(output))
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+
         cv2.imwrite(output, result)
         click.echo(f"Success! Spiral art saved to: {output}")
 
-    except Exception as e:  # noqa: BLE001
-        click.echo(f"Error: {e}", err=True)
+    except Exception as e:
+        raise click.ClickException(str(e)) from e
 
 
 if __name__ == "__main__":

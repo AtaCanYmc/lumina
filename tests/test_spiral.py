@@ -36,3 +36,16 @@ def test_to_spiral_has_lines():
 
     # There should be some non-transparent pixels (the spiral lines)
     assert np.any(result[:, :, 3] > 0)
+
+
+def test_to_spiral_invalid_inputs():
+    """Test that invalid lines or angle_step values raise ValueError."""
+    import pytest
+
+    img = np.ones((100, 100), dtype=np.uint8) * 128
+
+    with pytest.raises(ValueError, match="lines must be a positive integer"):
+        to_spiral(img, lines=0)
+
+    with pytest.raises(ValueError, match="angle_step must be a positive number"):
+        to_spiral(img, angle_step=-0.05)

@@ -41,6 +41,17 @@ class TestFlatCommand:
             assert result.exit_code == 0
             assert "Success!" in result.output
 
+    def test_flat_fails_on_invalid_dimensions(self):
+        runner = CliRunner()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            img_path = os.path.join(tmpdir, "test.jpg")
+            create_test_image(img_path)
+
+            result = runner.invoke(cli, ["flat", img_path, "--width", "-10"])
+
+            assert result.exit_code != 0
+            assert "Error:" in result.output
+
 
 class TestSpiralCommand:
     def test_spiral_creates_png(self):
@@ -66,3 +77,14 @@ class TestSpiralCommand:
 
             assert result.exit_code == 0
             assert os.path.exists(output_path)
+
+    def test_spiral_fails_on_invalid_parameters(self):
+        runner = CliRunner()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            img_path = os.path.join(tmpdir, "test.jpg")
+            create_test_image(img_path)
+
+            result = runner.invoke(cli, ["spiral", img_path, "--lines", "0"])
+
+            assert result.exit_code != 0
+            assert "Error:" in result.output

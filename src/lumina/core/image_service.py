@@ -15,8 +15,8 @@ def read_image(path: str, is_grayscale: bool) -> np.ndarray:
     image. This prevents transparent black from being interpreted as black and
     producing a full/solid lithophane plate.
     """
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Image not found: {path}")
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"Image not found or is not a regular file: {path}")
 
     if is_grayscale:
         # Read unchanged so we can detect alpha channel for PNGs
@@ -100,8 +100,18 @@ def resize_image(
     Returns:
         np.ndarray: Resized image.
     """
+    if width <= 0 or height <= 0:
+        raise ValueError("width and height must be positive numbers.")
+    if resolution <= 0:
+        raise ValueError("resolution must be a positive integer.")
+
     target_w = int(width * resolution)
     target_h = int(height * resolution)
+    if target_w <= 0 or target_h <= 0:
+        raise ValueError(
+            f"Calculated dimensions ({target_w}x{target_h}) must be greater than zero."
+        )
+
     z_dim = img.shape[2] if len(img.shape) == 3 else 1
     new_shape = (target_w, target_h, z_dim) if z_dim > 1 else (target_w, target_h)
     img = cv2.resize(img, new_shape, interpolation=cv2.INTER_AREA)
@@ -181,6 +191,11 @@ def to_spiral(img, lines=60, angle_step=0.05) -> np.ndarray:
     Returns:
         np.ndarray: Spiral image.
     """
+    if lines <= 0:
+        raise ValueError("lines must be a positive integer.")
+    if angle_step <= 0:
+        raise ValueError("angle_step must be a positive number.")
+
     h, w = img.shape
     center = (w // 2, h // 2)
     max_r = min(center)

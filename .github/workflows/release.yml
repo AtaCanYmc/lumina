@@ -46,14 +46,18 @@ jobs:
           python-version: '3.11'
 
       - name: Show environment
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          INPUT_REPO: ${{ github.event.inputs.repository }}
         run: |
-          echo "Release inputs: version=${{ github.event.inputs.version }} repository=${{ github.event.inputs.repository }}"
+          echo "Release inputs: version=$INPUT_VERSION repository=$INPUT_REPO"
 
       - name: Bump version in pyproject.toml
         id: bump
+        env:
+          NEW_VERSION: ${{ github.event.inputs.version }}
         run: |
           set -euo pipefail
-          NEW_VERSION="${{ github.event.inputs.version }}"
           python scripts/bump_version.py "$NEW_VERSION"
 
           git config user.name "github-actions[bot]"
@@ -65,9 +69,11 @@ jobs:
 
       - name: Create tag
         id: tag
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
           set -e
-          TAG="v${{ github.event.inputs.version }}"
+          TAG="v$INPUT_VERSION"
           git tag -a "$TAG" -m "Release $TAG"
           git push origin "$TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
@@ -82,30 +88,32 @@ jobs:
           python -m build --sdist --wheel
 
           # Run dist-version check script
-          python scripts/check_dist_version.py "${{ github.event.inputs.version }}"
+          python scripts/check_dist_version.py "$VERSION"
 
       - name: Publish to PyPI/TestPyPI
         env:
+          REPO: ${{ github.event.inputs.repository }}
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TEST_PYPI_API_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           set -e
-          REPO="${{ github.event.inputs.repository }}"
           if [ "$REPO" = "testpypi" ]; then
-            if [ -z "${{ secrets.TEST_PYPI_API_TOKEN }}" ]; then
+            if [ -z "$TEST_PYPI_API_TOKEN" ]; then
               echo "ERROR: TEST_PYPI_API_TOKEN secret is not set" >&2
               exit 1
             fi
-            export TWINE_PASSWORD="${{ secrets.TEST_PYPI_API_TOKEN }}"
+            export TWINE_PASSWORD="$TEST_PYPI_API_TOKEN"
             python -m pip install --upgrade pip
             pip install twine
             python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
           else
-            if [ -z "${{ secrets.PYPI_API_TOKEN }}" ]; then
+            if [ -z "$PYPI_API_TOKEN" ]; then
               echo "ERROR: PYPI_API_TOKEN secret is not set" >&2
               exit 1
             fi
-            export TWINE_PASSWORD="${{ secrets.PYPI_API_TOKEN }}"
+            export TWINE_PASSWORD="$PYPI_API_TOKEN"
             python -m pip install --upgrade pip
             pip install twine
             python -m twine upload dist/*
@@ -113,11 +121,14 @@ jobs:
 
       - name: Generate changelog
         id: changelog
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          CHANGELOG_FROM: ${{ github.event.inputs.changelog_from }}
         run: |
           set -e
-          TAG="v${{ github.event.inputs.version }}"
-          if [ -n "${{ github.event.inputs.changelog_from }}" ]; then
-            PREV="${{ github.event.inputs.changelog_from }}"
+          TAG="v$INPUT_VERSION"
+          if [ -n "$CHANGELOG_FROM" ]; then
+            PREV="$CHANGELOG_FROM"
           else
             PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
           fi
