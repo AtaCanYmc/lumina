@@ -121,8 +121,12 @@
 
           <!-- CLI Quick Copy Pill -->
           <div class="cli-snippet-pill" role="region" aria-label="Terminal Installation Command">
-            <code>pip install <span class="cli-code-text">lumina-tools</span></code>
-            <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="pip install lumina-tools" aria-label="Copy installation command" title="Copy to Clipboard">
+            <div class="hero-install-toggle" role="tablist" aria-label="Installation tool">
+              <button type="button" class="hero-tab active" role="tab" aria-selected="true" data-cmd="brew install AtaCanYmc/tap/lumina">brew</button>
+              <button type="button" class="hero-tab" role="tab" aria-selected="false" data-cmd="pip install lumina-tools">pip</button>
+            </div>
+            <code id="hero-install-code">brew install <span class="cli-code-text">AtaCanYmc/tap/lumina</span></code>
+            <button type="button" class="cli-copy-btn btn-copy-command" id="hero-copy-btn" data-clipboard-text="brew install AtaCanYmc/tap/lumina" aria-label="Copy installation command" title="Copy to Clipboard">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -371,12 +375,12 @@
 
         <div class="download-hub">
           <div class="download-split">
-            <!-- macOS App Box -->
+            <!-- macOS App & Homebrew Box -->
             <div class="download-box">
-              <span class="download-box-badge">Recommended (Desktop)</span>
-              <h3 class="download-box-title">macOS Desktop App</h3>
+              <span class="download-box-badge">Recommended (macOS)</span>
+              <h3 class="download-box-title">macOS Desktop &amp; Homebrew</h3>
               <p class="download-box-desc">
-                No terminal knowledge or Python environment required. Open the disk image, drag Lumina into your Applications folder, and start modeling.
+                No terminal knowledge required for the DMG. Or install and receive rolling updates seamlessly via Homebrew.
               </p>
 
               <a href="https://github.com/AtaCanYmc/lumina/releases/latest/download/Lumina-macos.dmg" class="btn btn-primary" download>
@@ -386,9 +390,19 @@
                 <span>Download Lumina-macos.dmg</span>
               </a>
 
-              <p style="margin-top: 14px; font-size: 0.82rem; color: var(--text-muted);">
+              <p style="margin-top: 14px; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">
                 Size: ~95 MB &bull; macOS 12 Monterey or newer &bull; Apple Silicon and Intel
               </p>
+
+              <div class="install-command-box" style="margin-bottom: 0;">
+                <code>brew install AtaCanYmc/tap/lumina</code>
+                <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="brew install AtaCanYmc/tap/lumina" aria-label="Copy brew install command" title="Copy brew install command">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <!-- CLI / Developer Box -->
@@ -455,7 +469,7 @@
               <tbody>
                 <tr>
                   <th scope="row">macOS (Apple Silicon &amp; Intel)</th>
-                  <td>Official Standalone App (.dmg) + CLI</td>
+                  <td>Official Standalone App (.dmg), Homebrew tap &amp; CLI</td>
                   <td>4 GB RAM, macOS 12+</td>
                   <td>STL, OBJ, PNG Preview</td>
                 </tr>

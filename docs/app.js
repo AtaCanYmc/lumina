@@ -141,7 +141,35 @@
     compareContainer.addEventListener("pointercancel", endDrag);
   }
 
-  // --- 3. Clipboard Copy for CLI Command ---
+  // --- 3. Hero Install Tool Toggle ---
+  const heroTabs = document.querySelectorAll(".hero-tab");
+  const heroInstallCode = document.getElementById("hero-install-code");
+  const heroCopyBtn = document.getElementById("hero-copy-btn");
+
+  if (heroTabs.length && heroInstallCode && heroCopyBtn) {
+    heroTabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        heroTabs.forEach(function (t) {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
+
+        const cmd = tab.getAttribute("data-cmd");
+        if (!cmd) return;
+        heroCopyBtn.setAttribute("data-clipboard-text", cmd);
+
+        if (cmd.startsWith("brew")) {
+          heroInstallCode.innerHTML = 'brew install <span class="cli-code-text">AtaCanYmc/tap/lumina</span>';
+        } else {
+          heroInstallCode.innerHTML = 'pip install <span class="cli-code-text">lumina-tools</span>';
+        }
+      });
+    });
+  }
+
+  // --- 4. Clipboard Copy for CLI Command ---
   const copyButtons = document.querySelectorAll(".btn-copy-command");
   const toast = document.getElementById("copy-toast");
 
