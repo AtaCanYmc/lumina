@@ -16,6 +16,7 @@ Lumina converts 2D raster images into 3D-printable lithophane STL meshes and Spi
   - [Create a Flat or Shaped Lithophane](#create-a-flat-or-shaped-lithophane)
   - [Generate Spiral Betty Art](#generate-spiral-betty-art)
   - [Chaining Spiral Art into a Lithophane Mesh](#chaining-spiral-art-into-a-lithophane-mesh)
+  - [Interactive 3D Viewport and Backlight Simulation](#interactive-3d-viewport-and-backlight-simulation)
 - [Command-Line Interface (CLI)](#command-line-interface-cli)
   - [CLI Commands](#cli-commands)
   - [CLI Flags Reference](#cli-flags-reference)
@@ -30,6 +31,7 @@ Lumina converts 2D raster images into 3D-printable lithophane STL meshes and Spi
 | :--- | :--- | :--- |
 | Flat and Shaped Lithophanes | Converts image grayscale intensity into variable Z-height geometry with boundary framing | Binary `.stl` mesh |
 | Spiral Betty Generator | Samples image brightness along Archimedean spiral paths with modulated line thickness | Grayscale `.png` image |
+| 3D Viewport & Light Simulation | WebGL Three.js viewport simulating real-world backlight transmission with adjustable color temperature | Standalone `.html` / Browser |
 
 <p align="center">
   <img src="assets/images/readme/slicer.png" alt="Classic Lithophane in Slicer" width="800">
@@ -138,6 +140,19 @@ mesh.save("spiral_lithophane.stl")
 <p align="center">
   <img src="assets/images/readme/spiral.png" alt="Spiral Betty Lithophane Example" width="800">
 </p>
+
+### Interactive 3D Viewport and Backlight Simulation
+
+Inspect generated lithophanes in an interactive WebGL 3D canvas featuring real-time physical light transmission:
+
+```python
+from lumina import open_viewer
+
+# Render and open interactive 3D simulation in your browser
+open_viewer("lithophane.stl")
+```
+
+---
 
 ## Command-Line Interface (CLI)
 

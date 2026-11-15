@@ -14,6 +14,19 @@ Lumina provides programmatic interfaces to generate 3D lithophane meshes and Spi
   - [Parameters](#parameters-1)
   - [Returns](#returns-1)
   - [Example](#example-1)
+- [`lumina.open_viewer`](#luminaopen_viewer)
+  - [Function Signature](#function-signature-2)
+  - [Parameters](#parameters-2)
+  - [Returns](#returns-2)
+  - [Example](#example-2)
+- [`lumina.generate_viewer_html`](#luminagenerate_viewer_html)
+  - [Function Signature](#function-signature-3)
+  - [Parameters](#parameters-3)
+  - [Returns](#returns-3)
+- [`lumina.get_mesh_stats`](#luminaget_mesh_stats)
+  - [Function Signature](#function-signature-4)
+  - [Parameters](#parameters-4)
+  - [Returns](#returns-4)
 
 ---
 
@@ -133,3 +146,105 @@ spiral_image = generate_spiral_betty_png(
 # Save result as PNG
 cv2.imwrite("portrait_spiral.png", spiral_image)
 ```
+
+---
+
+## `lumina.open_viewer`
+
+Generates an interactive WebGL 3D viewer for an STL lithophane file and optionally opens it in the default system web browser.
+
+### Function Signature
+
+```python
+from lumina import open_viewer
+
+def open_viewer(
+    stl_path: str,
+    output_html: str | None = None,
+    open_browser: bool = True,
+) -> str:
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `stl_path` | `str` | *required* | Path to the source `.stl` file. |
+| `output_html` | `str \| None` | `None` | Destination path to save the standalone HTML file. If `None`, creates a temporary file. |
+| `open_browser` | `bool` | `True` | Whether to automatically launch the default browser with the generated page. |
+
+### Returns
+
+- `str`: Absolute file path to the generated HTML viewer document.
+
+### Example
+
+```python
+from lumina import open_viewer
+
+# Render and open interactive 3D simulation
+html_path = open_viewer("lithophane.stl")
+print(f"Viewport launched: {html_path}")
+```
+
+---
+
+## `lumina.generate_viewer_html`
+
+Generates the self-contained HTML string embedding the 3D STL geometry, Three.js runtime, OrbitControls, and physical backlight transmission shader.
+
+### Function Signature
+
+```python
+from typing import Any
+from lumina import generate_viewer_html
+
+def generate_viewer_html(
+    stl_path_or_bytes: str | bytes,
+    title: str = "Lumina 3D Lithophane Viewer",
+    mesh_stats: dict[str, Any] | None = None,
+) -> str:
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `stl_path_or_bytes` | `str \| bytes` | *required* | File path or raw binary byte buffer of the STL mesh. |
+| `title` | `str` | `"Lumina 3D Lithophane Viewer"` | Page title string. |
+| `mesh_stats` | `dict[str, Any] \| None` | `None` | Precomputed geometric statistics dictionary. |
+
+### Returns
+
+- `str`: Self-contained HTML document string.
+
+---
+
+## `lumina.get_mesh_stats`
+
+Computes dimensional bounds, triangle count, volumetric displacement, and estimated physical PLA filament weight for a given mesh.
+
+### Function Signature
+
+```python
+from typing import Any
+from stl import mesh
+from lumina import get_mesh_stats
+
+def get_mesh_stats(
+    mesh_obj: mesh.Mesh,
+    density_g_cm3: float = 1.24,
+) -> dict[str, Any]:
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `mesh_obj` | `stl.mesh.Mesh` | *required* | Input `numpy-stl` mesh object. |
+| `density_g_cm3` | `float` | `1.24` | Material density in $\text{g/cm}^3$ (default: $1.24$ for standard PLA). |
+
+### Returns
+
+- `dict[str, Any]`: Dictionary with keys `facets`, `width_mm`, `height_mm`, `depth_mm`, `volume_cm3`, and `weight_grams`.
+

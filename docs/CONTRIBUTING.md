@@ -82,7 +82,7 @@ make test
 # Or directly: pytest
 ```
 
-All 26 test assertions must pass without regressions.
+All 45 test assertions must pass without regressions.
 
 ## Project Architecture
 
@@ -100,7 +100,10 @@ lumina/
 │   ├── core/
 │   │   ├── image_service.py   # Resizing, contrast enhancement, spiral algorithms
 │   │   ├── shapes.py          # Boundary masking strategies (rect, circle, heart)
-│   │   └── stl_service.py     # Heightmap meshing and STL generation
+│   │   ├── stl_service.py     # Heightmap meshing and STL generation
+│   │   └── viewer.py          # 3D WebGL viewport and physical light simulation
+│   ├── templates/
+│   │   └── viewer.html        # Standalone Three.js 3D viewer template
 │   └── utils/
 │       └── common_utils.py    # Shared geometry and array utilities
 ├── tests/                     # Pytest test suite
