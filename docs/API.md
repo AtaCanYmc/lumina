@@ -1,5 +1,7 @@
 # Lumina Python API Documentation
 
+[← Back to README](../README.md) • [Web Showcase](https://atacanymc.github.io/lumina/)
+
 Lumina provides programmatic interfaces to generate 3D lithophane meshes and Spiral Betty raster patterns.
 
 ## Table of Contents

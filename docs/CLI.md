@@ -1,5 +1,7 @@
 # Lumina CLI Documentation
 
+[← Back to README](../README.md) • [Web Showcase](https://atacanymc.github.io/lumina/)
+
 Lumina provides a command-line interface for generating lithophane 3D meshes and Spiral Betty raster patterns directly from the terminal.
 
 ## Table of Contents

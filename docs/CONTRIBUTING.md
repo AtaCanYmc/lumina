@@ -1,5 +1,7 @@
 # Contributing to Lumina
 
+[← Back to README](../README.md) • [Web Showcase](https://atacanymc.github.io/lumina/)
+
 Thank you for contributing to Lumina. This document outlines the development workflow, code standards, and pull request verification requirements.
 
 ## Table of Contents
