@@ -102,6 +102,10 @@ brew install AtaCanYmc/tap/lumina
 ### Via PyPI
 
 ```bash
+# Recommended for CLI on macOS / Linux (isolates without PEP 668 environment errors):
+pipx install lumina-tools
+
+# Or inside an active virtual environment:
 pip install lumina-tools
 ```
 
