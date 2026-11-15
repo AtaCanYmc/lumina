@@ -880,6 +880,21 @@ img, svg {
 }
 
 @media (max-width: 680px) {
+  .brand-badge {
+    display: none;
+  }
+  .nav-actions {
+    gap: 8px;
+  }
+  .nav-actions .btn-primary {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+  .nav-actions .btn-primary span {
+    display: none;
+  }
   .download-hub {
     padding: 24px 16px;
   }
@@ -899,7 +914,7 @@ img, svg {
     flex-direction: column;
     align-items: stretch;
   }
-  .btn {
+  .hero-cta-group .btn {
     width: 100%;
   }
   .cli-snippet-pill {

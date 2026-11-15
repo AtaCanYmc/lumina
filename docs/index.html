@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumina Studio | 3D Baskı Litofan Modelleme Aracı</title>
-  <meta name="description" content="Fotoğraflarınızı dilimleyiciye hazır, su sızdırmaz 3D litofan modellerine (STL / OBJ) dönüştürün. macOS masaüstü uygulaması ve açık kaynak Python CLI.">
+  <title>Lumina Studio | 3D Printable Lithophane Generator</title>
+  <meta name="description" content="Transform your photos into print-ready, watertight 3D lithophane models (STL / OBJ). Standalone macOS desktop studio and open-source Python CLI.">
 
   <!-- Open Graph / Meta -->
-  <meta property="og:title" content="Lumina Studio | 3D Baskı Litofan Modelleme Aracı">
-  <meta property="og:description" content="Fotoğraflarınızı yüksek hassasiyetli 3D litofanlara çevirin. %100 yerel ve açık kaynak.">
+  <meta property="og:title" content="Lumina Studio | 3D Printable Lithophane Generator">
+  <meta property="og:description" content="Convert photographs into high-precision 3D lithophanes. 100% local, private, and open source.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/desktop.png">
 
@@ -33,25 +33,25 @@
   <!-- Site Navigation Header -->
   <header class="site-header">
     <div class="container nav-wrapper">
-      <a href="#" class="brand-link" aria-label="Lumina Studio Ana Sayfa">
-        <img src="assets/logo.svg" alt="Lumina Studio Logosu" width="36" height="36" class="brand-logo">
+      <a href="#" class="brand-link" aria-label="Lumina Studio Home">
+        <img src="assets/logo.svg" alt="Lumina Studio Logo" width="36" height="36" class="brand-logo">
         <span>Lumina</span>
         <span class="brand-badge">v1.1.0</span>
       </a>
 
-      <nav aria-label="Ana Gezinti Menüsü">
+      <nav aria-label="Main Navigation">
         <ul class="nav-links">
-          <li><a href="#karsilastir" class="nav-link">Karşılaştırma</a></li>
-          <li><a href="#ozellikler" class="nav-link">Yetenekler</a></li>
-          <li><a href="#is-akisi" class="nav-link">İş Akışı</a></li>
-          <li><a href="#indir" class="nav-link">İndir</a></li>
-          <li><a href="#sss" class="nav-link">S.S.S.</a></li>
+          <li><a href="#compare" class="nav-link">Comparison</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#workflow" class="nav-link">Workflow</a></li>
+          <li><a href="#download" class="nav-link">Download</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
         <!-- Theme Toggle Button -->
-        <button type="button" id="theme-toggle" class="icon-btn" aria-label="Temayı Değiştir" title="Açık / Koyu Tema">
+        <button type="button" id="theme-toggle" class="icon-btn" aria-label="Switch Theme" title="Toggle Light / Dark Theme">
           <svg id="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;">
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2"></path>
@@ -69,20 +69,20 @@
         </button>
 
         <!-- GitHub Repo Link -->
-        <a href="https://github.com/AtaCanYmc/lumina" class="icon-btn" target="_blank" rel="noopener noreferrer" aria-label="Lumina GitHub Deposu" title="GitHub Deposu">
+        <a href="https://github.com/AtaCanYmc/lumina" class="icon-btn" target="_blank" rel="noopener noreferrer" aria-label="Lumina GitHub Repository" title="GitHub Repository">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
           </svg>
         </a>
 
         <!-- Header CTA -->
-        <a href="#indir" class="btn btn-primary">
+        <a href="#download" class="btn btn-primary" aria-label="Download Lumina">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          <span>İndir</span>
+          <span>Download</span>
         </a>
       </div>
     </div>
@@ -97,17 +97,17 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
-          Açık Kaynak 3D Baskı Stüdyosu
+          Open Source 3D Printing Studio
         </p>
 
         <h1 id="hero-heading" class="hero-title">
-          Işığı Sanata Dönüştüren <br>
-          <span class="hero-title-highlight">Litofan Modelleme Aracı</span>
+          Transform Light into Art with <br>
+          <span class="hero-title-highlight">Precision Lithophanes</span>
         </h1>
 
         <p class="hero-description">
-          Fotoğraflarınızı dilimleyiciye hazır, su sızdırmaz 3D litofan modellerine (STL ve OBJ) çevirin.
-          İster modern macOS masaüstü stüdyosuyla görsel çalışın, ister terminalden otomatikleştirin.
+          Convert your photographs into watertight, slicer-ready 3D lithophane models (STL and OBJ).
+          Work visually inside the modern macOS desktop studio, or automate batch generation from your terminal.
         </p>
 
         <div class="hero-cta-group">
@@ -116,13 +116,13 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.9.04-2 .6-2.64 1.35-.56.64-1.05 1.71-.92 2.74 1.01.08 2.03-.47 2.64-1.22z"></path>
             </svg>
-            <span>Lumina.dmg İndir (macOS)</span>
+            <span>Download Lumina.dmg (macOS)</span>
           </a>
 
           <!-- CLI Quick Copy Pill -->
-          <div class="cli-snippet-pill" role="region" aria-label="Terminal Kurulum Komutu">
+          <div class="cli-snippet-pill" role="region" aria-label="Terminal Installation Command">
             <code>pip install <span class="cli-code-text">lumina-studio</span></code>
-            <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="pip install lumina-studio" aria-label="Kurulum komutunu kopyala" title="Panoya Kopyala">
+            <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="pip install lumina-studio" aria-label="Copy installation command" title="Copy to Clipboard">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -132,11 +132,11 @@
         </div>
 
         <p class="hero-meta-badge">
-          <span>Sürüm 1.1.0</span>
+          <span>Version 1.1.0</span>
           <span>•</span>
-          <span>Apple Silicon (M1/M2/M3/M4) ve Intel Uyumlu</span>
+          <span>Apple Silicon (M-series) and Intel Universal</span>
           <span>•</span>
-          <span>Terminal Gerekmez</span>
+          <span>Zero Terminal Prerequisite</span>
         </p>
 
         <!-- Real Desktop Application Visual Frame -->
@@ -148,10 +148,10 @@
                 <span class="window-dot dot-yellow"></span>
                 <span class="window-dot dot-green"></span>
               </div>
-              <span class="window-title">Lumina Studio: Litophane Generator &amp; 3D Inspector</span>
+              <span class="window-title">Lumina Studio: Lithophane Generator &amp; 3D Inspector</span>
             </div>
             <div class="window-body">
-              <img src="assets/desktop.png" alt="Lumina Studio macOS masaüstü arayüzü: sol panelde parametre kontrolleri, sağ panelde 3D litofan önizlemesi" width="3024" height="1964" fetchpriority="high">
+              <img src="assets/desktop.png" alt="Lumina Studio macOS desktop interface: left panel with parameter controls, right panel with 3D lithophane preview" width="3024" height="1964" fetchpriority="high">
             </div>
           </div>
         </div>
@@ -159,24 +159,24 @@
     </section>
 
     <!-- Interactive Comparison Slider Section -->
-    <section id="karsilastir" class="section" aria-labelledby="compare-heading">
+    <section id="compare" class="section" aria-labelledby="compare-heading">
       <div class="container">
         <header class="section-header">
-          <span class="section-label">İnteraktif Dönüşüm</span>
-          <h2 id="compare-heading" class="section-title">2D Fotoğraftan 3D Katı Rölyefe</h2>
+          <span class="section-label">Interactive Transformation</span>
+          <h2 id="compare-heading" class="section-title">From 2D Photograph to 3D Solid Relief</h2>
           <p class="section-description">
-            Kaydırıcıyı sürükleyerek veya altındaki kontrolü kullanarak orijinal fotoğraf ile üretilen katı litofan derinlik modeli arasındaki geçişi inceleyin.
+            Drag the slider or use the input control below to inspect the transition between the original photograph and the resulting solid 3D lithophane depth model.
           </p>
         </header>
 
         <div class="compare-wrapper">
-          <div class="compare-container" id="compare-container" role="img" aria-label="Giriş fotoğrafı ile üretilen 3D litofan mesh modelinin karşılaştırması">
+          <div class="compare-container" id="compare-container" role="img" aria-label="Comparison between input photograph and generated 3D lithophane mesh model">
             <!-- Base Image (3D Litophane Mesh Render) -->
-            <img src="assets/rect_litho_output.png" alt="Üretilen 3D litofan rölyef modeli" width="1580" height="1740" class="compare-image">
+            <img src="assets/rect_litho_output.png" alt="Generated 3D lithophane relief model" width="1580" height="1740" class="compare-image">
 
             <!-- Overlay Image (Original 2D Photograph) -->
             <div class="compare-image-overlay" id="compare-overlay">
-              <img src="assets/example_input_1200.jpg" alt="Orijinal giriş fotoğrafı" width="800" height="1200">
+              <img src="assets/example_input_1200.jpg" alt="Original input photograph" width="800" height="1200">
             </div>
 
             <!-- Divider Line & Handle -->
@@ -199,7 +199,7 @@
                 <circle cx="9" cy="9" r="2"></circle>
                 <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
               </svg>
-              Orijinal 2D Fotoğraf
+              Original 2D Photo
             </span>
             <span id="compare-percent" aria-live="polite">%50</span>
             <span class="compare-label-tag">
@@ -208,23 +208,23 @@
                 <path d="M12 3v18"></path>
                 <path d="m3 8 9 5 9-5"></path>
               </svg>
-              Su Sızdırmaz 3D Mesh (STL)
+              Watertight 3D Mesh (STL)
             </span>
           </div>
 
-          <input type="range" id="compare-slider" class="compare-control-slider" min="0" max="100" value="50" aria-label="Fotoğraf ve litofan dönüşüm oranını ayarla">
+          <input type="range" id="compare-slider" class="compare-control-slider" min="0" max="100" value="50" aria-label="Adjust photograph and lithophane transition percentage">
         </div>
       </div>
     </section>
 
     <!-- Features Section (Asymmetric Craftsmanship Layout) -->
-    <section id="ozellikler" class="section" aria-labelledby="features-heading">
+    <section id="features" class="section" aria-labelledby="features-heading">
       <div class="container">
         <header class="section-header">
-          <span class="section-label">Mühendislik &amp; Zanaat</span>
-          <h2 id="features-heading" class="section-title">Hassas 3D Baskı İçin Tasarlandı</h2>
+          <span class="section-label">Engineering &amp; Craft</span>
+          <h2 id="features-heading" class="section-title">Engineered for Flawless 3D Printing</h2>
           <p class="section-description">
-            Standart görüntü dönüştürücülerinin aksine Lumina, doğrudan dilimleyici gereksinimlerini karşılayan manifold katı gövdeler inşa eder.
+            Unlike naive image converters, Lumina constructs manifold solid geometries designed specifically to meet 3D slicer tolerances.
           </p>
         </header>
 
@@ -237,15 +237,15 @@
                 <polyline points="8 6 2 12 8 18"></polyline>
               </svg>
             </div>
-            <h3 class="feature-card-title">Vektörize Mesh Algoritması</h3>
+            <h3 class="feature-card-title">Vectorized Mesh Engine</h3>
             <p class="feature-card-text">
-              NumPy tabanlı grid hesaplamalarıyla pikseller doğrudan 3D koordinatlara haritalanır.
-              Yüzbinlerce üçgenden oluşan yüksek yoğunluklu mesh yüzeyleri, Python döngülerine takılmadan saniyeler içinde oluşturulur.
+              NumPy grid interpolation maps pixel luminance directly into 3D Cartesian coordinates.
+              Dense surface meshes with hundreds of thousands of triangles are generated in seconds without slow Python loops.
             </p>
             <div class="feature-tag-list">
               <span class="feature-tag">NumPy Vectorized</span>
               <span class="feature-tag">Trimesh Export</span>
-              <span class="feature-tag">0.8mm ile 3.2mm Kalınlık Kontrolü</span>
+              <span class="feature-tag">0.8mm to 3.2mm Thickness Control</span>
             </div>
           </article>
 
@@ -257,14 +257,14 @@
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
             </div>
-            <h3 class="feature-card-title">%100 Çevrimdışı ve Gizlilik Odaklı</h3>
+            <h3 class="feature-card-title">100% Offline &amp; Private</h3>
             <p class="feature-card-text">
-              Kişisel fotoğraflarınız asla üçüncü taraf sunuculara veya bulut servislerine iletilmez.
-              Tüm piksel işleme ve mesh üretimi kendi bilgisayarınızda yerel olarak gerçekleşir.
+              Your personal photographs are never uploaded to third-party servers or external cloud services.
+              All image filtering and 3D mesh tessellation run strictly on your local computer.
             </p>
             <div class="feature-tag-list">
-              <span class="feature-tag">Sıfır Bulut Bağımlılığı</span>
-              <span class="feature-tag">Tam Yerel Güvenlik</span>
+              <span class="feature-tag">Zero Cloud Dependency</span>
+              <span class="feature-tag">Complete Local Security</span>
             </div>
           </article>
 
@@ -276,10 +276,10 @@
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
               </svg>
             </div>
-            <h3 class="feature-card-title">4 Geometrik Şekil Maskesi</h3>
+            <h3 class="feature-card-title">4 Geometric Shape Strategies</h3>
             <p class="feature-card-text">
-              Dikdörtgen, Dairesel, Kalp ve Spiral şekil stratejileri.
-              Görselin odak noktasını koruyarak kenarlarda zarif ve baskıya dayanıklı çerçeve geçişleri uygular.
+              Rectangular, Circular, Heart, and Spiral shape masking.
+              Preserves photograph composition while creating clean, rigid perimeter borders that withstand bed adhesion stress.
             </p>
             <div class="feature-tag-list">
               <span class="feature-tag">Rectangle</span>
@@ -298,12 +298,13 @@
                 <line x1="12" y1="22.08" x2="12" y2="12"></line>
               </svg>
             </div>
-            <h3 class="feature-card-title">Entegre 3D WebGL Görselleştirici</h3>
+            <h3 class="feature-card-title">Integrated 3D WebGL Inspector</h3>
             <p class="feature-card-text">
-              Faset detaylarını, ışık geçirgenliğini ve arka ışık açılarını baskı öncesinde interaktif olarak döndürün, yakınlaştırın ve denetleyin.
+              Inspect facet fidelity, light transmittance, and backlight angles interactively before printing.
+              Rotate, zoom, and inspect wireframe density in real time.
             </p>
             <div class="feature-visual-frame">
-              <img src="assets/viewport.png" alt="Lumina 3D WebGL önizleme alanı: orbit kontrolleri, ışık açısı ve tel kafes denetimi" width="3024" height="1792" loading="lazy">
+              <img src="assets/viewport.png" alt="Lumina 3D WebGL viewport: orbit controls, light angle, and wireframe inspection" width="3024" height="1792" loading="lazy">
             </div>
           </article>
         </div>
@@ -311,46 +312,46 @@
     </section>
 
     <!-- Workflow Section -->
-    <section id="is-akisi" class="section" aria-labelledby="workflow-heading">
+    <section id="workflow" class="section" aria-labelledby="workflow-heading">
       <div class="container">
         <header class="section-header">
-          <span class="section-label">İş Akışı</span>
-          <h2 id="workflow-heading" class="section-title">Fotoğraftan Baskıya 4 Adım</h2>
+          <span class="section-label">Workflow</span>
+          <h2 id="workflow-heading" class="section-title">Four Steps from Photo to Print</h2>
           <p class="section-description">
-            Dilimleyicide baskı hatası almadan ilk seferde kusursuz litofan üretmenin pratik yolu.
+            The reliable path to printing crisp, artifact-free lithophanes on the first attempt.
           </p>
         </header>
 
         <div class="workflow-track">
           <div class="workflow-step">
-            <div class="step-number">ADIM 01</div>
-            <h3 class="step-title">Görsel Seçimi</h3>
+            <div class="step-number">STEP 01</div>
+            <h3 class="step-title">Select Photograph</h3>
             <p class="step-desc">
-              JPEG, PNG veya WEBP formatındaki fotoğrafı yükleyin. Lumina parlaklık değerlerini otomatik olarak analiz eder ve dinamik aralığı dengeler.
+              Import any standard JPEG, PNG, or WEBP image. Lumina automatically assesses luminance distribution and normalizes the dynamic range.
             </p>
           </div>
 
           <div class="workflow-step">
-            <div class="step-number">ADIM 02</div>
-            <h3 class="step-title">Kalınlık &amp; Şekil</h3>
+            <div class="step-number">STEP 02</div>
+            <h3 class="step-title">Depth &amp; Geometry</h3>
             <p class="step-desc">
-              Min kalınlık (ışık geçiren en açık ton) ve max kalınlık (en koyu gölge) değerlerini milimetrik olarak belirleyin. Çerçeve genişliğini seçin.
+              Define minimum thickness (brightest highlights) and maximum thickness (deepest shadows) with sub-millimeter precision. Choose a shape and border width.
             </p>
           </div>
 
           <div class="workflow-step">
-            <div class="step-number">ADIM 03</div>
-            <h3 class="step-title">3D Mesh Üretimi</h3>
+            <div class="step-number">STEP 03</div>
+            <h3 class="step-title">Generate 3D Solid</h3>
             <p class="step-desc">
-              Tek tıkla manifold (su sızdırmaz) katı gövde oluşturulur. STL veya OBJ olarak dilimleyiciniz için dışa aktarın.
+              Construct a watertight manifold mesh with one click. Export directly as an STL or OBJ file ready for your slicer.
             </p>
           </div>
 
           <div class="workflow-step">
-            <div class="step-number">ADIM 04</div>
-            <h3 class="step-title">Dilimleme &amp; Baskı</h3>
+            <div class="step-number">STEP 04</div>
+            <h3 class="step-title">Slice &amp; 3D Print</h3>
             <p class="step-desc">
-              Modeli yazıcı tablasına dikey yerleştirin. %100 dolgu (infill) ve 0.12mm katman yüksekliği ile opak beyaz PLA kullanarak basın.
+              Place the model vertically along your printer's Y-axis. Slice at 100% solid infill with 0.12mm layer height using opaque white PLA.
             </p>
           </div>
         </div>
@@ -358,13 +359,13 @@
     </section>
 
     <!-- Download & Hub Section -->
-    <section id="indir" class="section" aria-labelledby="download-heading">
+    <section id="download" class="section" aria-labelledby="download-heading">
       <div class="container">
         <header class="section-header">
-          <span class="section-label">Kurulum &amp; Dağıtım</span>
-          <h2 id="download-heading" class="section-title">Lumina'yı Edin</h2>
+          <span class="section-label">Distribution &amp; Setup</span>
+          <h2 id="download-heading" class="section-title">Get Lumina</h2>
           <p class="section-description">
-            İster bağımsız macOS masaüstü uygulamasını indirin, ister Python CLI ile terminalinize dahil edin.
+            Download the standalone macOS application bundle, or install the Python CLI into your terminal.
           </p>
         </header>
 
@@ -372,35 +373,35 @@
           <div class="download-split">
             <!-- macOS App Box -->
             <div class="download-box">
-              <span class="download-box-badge">Tavsiye Edilen (Masaüstü)</span>
-              <h3 class="download-box-title">macOS Uygulaması</h3>
+              <span class="download-box-badge">Recommended (Desktop)</span>
+              <h3 class="download-box-title">macOS Desktop App</h3>
               <p class="download-box-desc">
-                Terminal bilgisi veya Python kurulumu gerektirmez. DMG dosyasını açın, Lumina'yı Applications klasörüne sürükleyin ve hemen kullanmaya başlayın.
+                No terminal knowledge or Python environment required. Open the disk image, drag Lumina into your Applications folder, and start modeling.
               </p>
 
               <a href="https://github.com/AtaCanYmc/lumina/releases/latest/download/Lumina-1.1.0-macos.dmg" class="btn btn-primary" download>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.9.04-2 .6-2.64 1.35-.56.64-1.05 1.71-.92 2.74 1.01.08 2.03-.47 2.64-1.22z"></path>
                 </svg>
-                <span>Lumina-1.1.0-macos.dmg İndir</span>
+                <span>Download Lumina-1.1.0-macos.dmg</span>
               </a>
 
               <p style="margin-top: 14px; font-size: 0.82rem; color: var(--text-muted);">
-                Boyut: ~95 MB &bull; macOS 12 Monterey ve daha yenisi &bull; Apple Silicon ve Intel
+                Size: ~95 MB &bull; macOS 12 Monterey or newer &bull; Apple Silicon and Intel
               </p>
             </div>
 
             <!-- CLI / Developer Box -->
             <div class="download-box">
-              <span class="download-box-badge">Geliştirici &amp; CLI</span>
-              <h3 class="download-box-title">Python Terminal Paketi</h3>
+              <span class="download-box-badge">Developer &amp; CLI</span>
+              <h3 class="download-box-title">Python Terminal Package</h3>
               <p class="download-box-desc">
-                Betiklerinizde veya sunucu iş akışlarınızda toplu litofan üretimi yapmak için pip ile yükleyin.
+                Install via pip to integrate batch lithophane automation into your existing scripts or build pipelines.
               </p>
 
               <div class="install-command-box">
                 <code>pip install lumina-studio</code>
-                <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="pip install lumina-studio" aria-label="pip komutunu kopyala">
+                <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="pip install lumina-studio" aria-label="Copy pip command" title="Copy pip command">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -409,8 +410,8 @@
               </div>
 
               <div class="install-command-box">
-                <code>lumina create foto.jpg -o cikti.stl</code>
-                <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="lumina create foto.jpg -o cikti.stl" aria-label="lumina komutunu kopyala">
+                <code>lumina create photo.jpg -o output.stl</code>
+                <button type="button" class="cli-copy-btn btn-copy-command" data-clipboard-text="lumina create photo.jpg -o output.stl" aria-label="Copy lumina command" title="Copy lumina command">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -420,7 +421,7 @@
 
               <div style="margin-top: 18px;">
                 <a href="https://github.com/AtaCanYmc/lumina" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-                  <span>GitHub'da Kaynak Kodu İncele</span>
+                  <span>Explore Source Code on GitHub</span>
                 </a>
               </div>
             </div>
@@ -429,31 +430,31 @@
           <!-- System Specs Table -->
           <div class="table-responsive">
             <table class="system-spec-table">
-              <caption class="sr-only" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">Sistem Gereksinimleri ve Uyumluluk</caption>
+              <caption class="sr-only" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">System Requirements and Compatibility</caption>
               <thead>
                 <tr>
                   <th scope="col">Platform</th>
-                  <th scope="col">Destek Durumu</th>
-                  <th scope="col">Minimum Donanım</th>
-                  <th scope="col">Çıktı Formatları</th>
+                  <th scope="col">Support Level</th>
+                  <th scope="col">Minimum Hardware</th>
+                  <th scope="col">Output Formats</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th scope="row">macOS (Apple Silicon &amp; Intel)</th>
-                  <td>Resmi Standalone App (.dmg) + CLI</td>
+                  <td>Official Standalone App (.dmg) + CLI</td>
                   <td>4 GB RAM, macOS 12+</td>
                   <td>STL, OBJ, PNG Preview</td>
                 </tr>
                 <tr>
                   <th scope="row">Linux (Ubuntu / Fedora / Arch)</th>
-                  <td>Python CLI + Qt GUI (pip ile)</td>
+                  <td>Python CLI + Qt GUI (via pip)</td>
                   <td>Python 3.10+, OpenGL 3.3</td>
                   <td>STL, OBJ</td>
                 </tr>
                 <tr>
                   <th scope="row">Windows (10 / 11)</th>
-                  <td>Python CLI + Qt GUI (pip ile)</td>
+                  <td>Python CLI + Qt GUI (via pip)</td>
                   <td>Python 3.10+, 4 GB RAM</td>
                   <td>STL, OBJ</td>
                 </tr>
@@ -465,20 +466,20 @@
     </section>
 
     <!-- FAQ Section (R-28: Genuine Maker Questions) -->
-    <section id="sss" class="section" aria-labelledby="faq-heading">
+    <section id="faq" class="section" aria-labelledby="faq-heading">
       <div class="container">
         <header class="section-header">
-          <span class="section-label">Merak Edilenler</span>
-          <h2 id="faq-heading" class="section-title">Sıkça Sorulan Sorular</h2>
+          <span class="section-label">Knowledge Base</span>
+          <h2 id="faq-heading" class="section-title">Frequently Asked Questions</h2>
           <p class="section-description">
-            3D yazıcı ile litofan basarken en sık karşılaşılan teknik konular.
+            Key techniques and answers for producing high-contrast 3D printed lithophanes.
           </p>
         </header>
 
         <div class="faq-grid">
           <details class="faq-item">
             <summary class="faq-trigger">
-              <span>Litofan baskısı için en ideal dilimleyici (slicer) ayarları nelerdir?</span>
+              <span>What are the best slicer settings for printing lithophanes?</span>
               <span class="faq-icon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
@@ -486,16 +487,16 @@
               </span>
             </summary>
             <div class="faq-answer">
-              Litofanların ışığı doğru geçirebilmesi için en kritik ayar dolgu oranının (infill) kesinlikle <strong>%100</strong> olmasıdır.
-              İçeride boşluk veya ızgara deseni kalmamalıdır.
-              Ayrıca model baskı tablasına dikey (dik duracak şekilde) ve yazıcının Y eksenine (tabla hareketine) paralel yerleştirilmelidir.
-              Önerilen katman yüksekliği 0.10mm ile 0.12mm arasındadır.
+              To allow light to transmit cleanly without internal shadow artifacts, the most critical slicer setting is <strong>100% infill</strong>.
+              There must be no internal grid or hollow voids.
+              Additionally, place the model vertically (standing upright) and orient it parallel to your printer's Y-axis (bed movement direction) to eliminate wobble during rapid acceleration.
+              A layer height between 0.10mm and 0.12mm delivers sharp photographic transitions.
             </div>
           </details>
 
           <details class="faq-item">
             <summary class="faq-trigger">
-              <span>Hangi filament malzemesi ve rengi tercih edilmelidir?</span>
+              <span>Which filament material and color should I choose?</span>
               <span class="faq-icon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
@@ -503,15 +504,15 @@
               </span>
             </summary>
             <div class="faq-answer">
-              Standart beyaz PLA veya soğuk beyaz litofan filamentleri en yüksek kontrastı sunar.
-              Krem ve fildişi tonları daha sıcak bir vintage aydınlatma etkisi sağlar.
-              Saydam (transparent) filamentler ışığı yaymak yerine doğrudan geçirdiği için litofanda görüntü oluşturmaz; mutlaka yarı saydam/opak beyaz tercih edilmelidir.
+              Standard opaque white or cool white PLA delivers the highest visual dynamic range.
+              Ivory or warm white filaments yield a softer, vintage warm glow.
+              Avoid transparent or translucent filaments: they transmit light directly without diffusing it, preventing the photographic image from forming.
             </div>
           </details>
 
           <details class="faq-item">
             <summary class="faq-trigger">
-              <span>macOS'ta "Geliştirici doğrulanamadı" uyarısı alırsam ne yapmalıyım?</span>
+              <span>How do I resolve the macOS "Developer cannot be verified" prompt?</span>
               <span class="faq-icon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
@@ -519,15 +520,15 @@
               </span>
             </summary>
             <div class="faq-answer">
-              Açık kaynak projeler Apple Developer ücretli sertifikası içermediğinde macOS Gatekeeper ilk açılışta bu güvenlik uyarısını verebilir.
-              Uygulamayı ilk seferde açmak için Finder'dan Lumina.app üzerine <strong>sağ tıklayıp "Aç" (Open)</strong> seçeneğini seçmeniz ve çıkan onay kutusunda "Aç" demeniz yeterlidir.
-              Sonraki açılışlarda doğrudan çift tıklamayla çalışacaktır.
+              Because Lumina is an open-source project distributed outside the paid Apple Developer Program, macOS Gatekeeper may display a security prompt on initial launch.
+              To authorize Lumina, locate Lumina.app in Finder, <strong>right-click (or Control-click) and select "Open"</strong>, then confirm by clicking "Open" in the dialog.
+              Subsequent launches will open directly with a regular double-click.
             </div>
           </details>
 
           <details class="faq-item">
             <summary class="faq-trigger">
-              <span>Minimum ve maksimum kalınlık değerleri ne anlama gelir?</span>
+              <span>What do minimum and maximum thickness values control?</span>
               <span class="faq-icon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
@@ -535,9 +536,9 @@
               </span>
             </summary>
             <div class="faq-answer">
-              Minimum kalınlık (varsayılan 0.8mm) fotoğraftaki en beyaz piksellere denk gelir ve ışığın en parlak geçtiği yerdir.
-              Maksimum kalınlık (varsayılan 3.0mm) en koyu gölgeleri temsil eder ve ışığı bloke eder.
-              Bu aralık ne kadar iyi kalibre edilirse litofanın dinamik kontrastı o kadar zengin görünür.
+              Minimum thickness (default 0.8mm) corresponds to the brightest white pixels in your image, allowing the maximum amount of light through.
+              Maximum thickness (default 3.0mm) corresponds to the deepest shadows, blocking backlight.
+              Tuning this thickness delta establishes the contrast and tonal range of your printed piece.
             </div>
           </details>
         </div>
@@ -550,29 +551,29 @@
     <div class="container">
       <div class="footer-top">
         <a href="#" class="brand-link" aria-label="Lumina Studio">
-          <img src="assets/logo.svg" alt="Lumina Logosu" width="28" height="28" class="brand-logo">
+          <img src="assets/logo.svg" alt="Lumina Logo" width="28" height="28" class="brand-logo">
           <span>Lumina Studio</span>
         </a>
 
         <ul class="footer-nav">
-          <li><a href="#karsilastir">Karşılaştırma</a></li>
-          <li><a href="#ozellikler">Yetenekler</a></li>
-          <li><a href="#is-akisi">İş Akışı</a></li>
-          <li><a href="#indir">İndir</a></li>
+          <li><a href="#compare">Comparison</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#workflow">Workflow</a></li>
+          <li><a href="#download">Download</a></li>
           <li><a href="https://github.com/AtaCanYmc/lumina" target="_blank" rel="noopener noreferrer">GitHub</a></li>
         </ul>
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 Lumina Studio. MIT Lisansı ile açık kaynak olarak dağıtılmaktadır.</p>
-        <p>Baskıya hazır litofanlar için üretilmiştir.</p>
+        <p>&copy; 2026 Lumina Studio. Distributed as open source under the MIT License.</p>
+        <p>Engineered for print-ready lithophanes.</p>
       </div>
     </div>
   </footer>
 
   <!-- Toast Notice Container for Copy Action -->
   <div id="copy-toast" class="toast-notice" role="status" aria-live="polite">
-    Komut panoya kopyalandı!
+    Command copied to clipboard!
   </div>
 
   <script src="app.js"></script>

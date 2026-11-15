@@ -33,7 +33,7 @@
     }
     themeToggleBtn.setAttribute(
       "aria-label",
-      isDark ? "Açık temaya geç" : "Koyu temaya geç"
+      isDark ? "Switch to light theme" : "Switch to dark theme"
     );
   }
 
@@ -162,7 +162,7 @@
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textToCopy).then(
           function () {
-            showToast("Komut panoya kopyalandı!");
+            showToast("Command copied to clipboard!");
           },
           function () {
             fallbackCopy(textToCopy);
@@ -184,9 +184,9 @@
     input.select();
     try {
       document.execCommand("copy");
-      showToast("Komut panoya kopyalandı!");
+      showToast("Command copied to clipboard!");
     } catch (e) {
-      showToast("Kopyalanamadı, lütfen manuel kopyalayın.");
+      showToast("Could not copy, please copy manually.");
     }
     document.body.removeChild(input);
   }
