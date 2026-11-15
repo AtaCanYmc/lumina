@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.3.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.2.0...lumina-tools-v1.3.0) (2026-11-15)
+
+
+### Features
+
+* **pages:** add responsive antislop github pages landing and distribution site ([a7dd865](https://github.com/AtaCanYmc/lumina/commit/a7dd86517c6dbb1b7e018e43e19349b9ebea2e50))
+* **pages:** localize landing page to English and optimize mobile header ([e9fe00e](https://github.com/AtaCanYmc/lumina/commit/e9fe00ec6e1a14c331aef0eeaf4768c440e1dfa7))
+* **release:** configure dynamic versioning with release-please extra-files and evergreen DMG ([261a0a7](https://github.com/AtaCanYmc/lumina/commit/261a0a7fcca803ef795d2993c2f81de1b2ec8f87))
+
+
+### Bug Fixes
+
+* **ci:** make Python package publishing retries idempotent ([d09c997](https://github.com/AtaCanYmc/lumina/commit/d09c997caafdefb4cdc549b1f7d628927bccd128))
+* **ci:** robust python interpreter resolution in build_dmg.sh for github actions ([1dbca33](https://github.com/AtaCanYmc/lumina/commit/1dbca33ada8e29566e269649254cef064d701e45))
+* **styles:** prevent vertical image distortion in 3D inspector feature card ([bbbe4c4](https://github.com/AtaCanYmc/lumina/commit/bbbe4c4e6d6bcc03b63bd7ba34f12e690ebad3ea))
+
+
+### Documentation
+
+* polish documentation and add governance automations via well-document ([a038410](https://github.com/AtaCanYmc/lumina/commit/a0384108740d619f0ce7321833f66371d8e5aefa))
+
 ## [1.2.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.1.0...lumina-tools-v1.2.0) (2026-11-15)
 
 
