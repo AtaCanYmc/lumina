@@ -8,8 +8,10 @@ scripts/*.py
 .DS_Store
 assets/stl/**
 *.stl
-*.egg-info
-locale_*
-.pytest_cache/
 dist/
+build/
+*.egg-info/
+*.egg
+.pytest_cache/
+locale_*
 uv.lock
