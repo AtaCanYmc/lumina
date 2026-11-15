@@ -43,7 +43,9 @@ class TestCliUi:
         runner = CliRunner()
         result = runner.invoke(cli, ["--version"])
         assert result.exit_code == 0
-        assert "1.1.0" in result.output
+        from lumina import __version__
+
+        assert __version__ in result.output
 
 
 class TestFlatCommand:
