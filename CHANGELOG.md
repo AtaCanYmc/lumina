@@ -1,0 +1,44 @@
+# Changelog
+
+## [1.1.0](https://github.com/AtaCanYmc/lumina/compare/lumina-tools-v1.0.0...lumina-tools-v1.1.0) (2026-11-15)
+
+
+### Features
+
+* Add `spiral` CLI command to generate spiral Betty art from images. ([8821708](https://github.com/AtaCanYmc/lumina/commit/8821708508f5014e71fa78605b54152b7d463e33))
+* Add `to_spiral` image transformation and simplify `jpg_to_stl` by removing frame parameters. ([944e0a0](https://github.com/AtaCanYmc/lumina/commit/944e0a0e85c3c71e9540a018c0d79acfd0387000))
+* Add an `invert` parameter to `filename_to_stl` to control image inversion. ([5a8865b](https://github.com/AtaCanYmc/lumina/commit/5a8865b8f62a6adb7d4cc52928be622292c3b420))
+* Add contributing guidelines and update README with quick start examples and a feature table. ([e637b67](https://github.com/AtaCanYmc/lumina/commit/e637b67b8d6670f3b893c26cf9f64f8f4aac38e3))
+* Add GitHub Actions workflows for CI testing and PyPI package publishing. ([c499e0f](https://github.com/AtaCanYmc/lumina/commit/c499e0f178f8270a9139431c4b7ca7239845cbbb))
+* Add normalize option for image processing and enhance grayscale handling ([d83af7e](https://github.com/AtaCanYmc/lumina/commit/d83af7e169411b1e44cb853d7f29d0af06096e76))
+* add scripts to bump version and check distribution version ([1bfc831](https://github.com/AtaCanYmc/lumina/commit/1bfc83137862266e753d90d3ee7c5215a3062fde))
+* **brew:** add homebrew formula and installation instructions ([c09d80d](https://github.com/AtaCanYmc/lumina/commit/c09d80d1d8e7476c112ed0cbab947a0c95238ee2))
+* Enhance the CLI with detailed options for flat lithophane generation and introduce comprehensive API and CLI documentation. ([a79d608](https://github.com/AtaCanYmc/lumina/commit/a79d60871ea6b76a585f707266fa40c017c9c6ee))
+* Implement bitmap generation and export to C-array/hex for embedded displays via new CLI command and library functions. ([4b0bf51](https://github.com/AtaCanYmc/lumina/commit/4b0bf51b6b02e64052814b8f7c048f93bf094e04))
+* Implement RGBA canvas for image generation, add new output examples, and update gitignore to track new assets. ([a71336d](https://github.com/AtaCanYmc/lumina/commit/a71336d8c548f08178d26ce0d0dd6f6bb3c68a6b))
+* Implement shape strategy for STL generation, enhance frame handling with CV2, and add new tests. ([2bde33e](https://github.com/AtaCanYmc/lumina/commit/2bde33e9e398644115d4af97930a4898818546a4))
+* Implement spiral art generation with `generate_spiral_betty_png` API, core logic adjustments, and dedicated tests. ([b80da73](https://github.com/AtaCanYmc/lumina/commit/b80da73e02917cf28154130e2450f422c2586f3f))
+
+
+### Bug Fixes
+
+* Adjust heart mask generation to scale coordinates and render the heart upright. ([8e68c63](https://github.com/AtaCanYmc/lumina/commit/8e68c63133cd3cdc562f017bb2e0de601bf41f11))
+* **ci:** resolve ruff linter errors and configure lint rules ([0ca0732](https://github.com/AtaCanYmc/lumina/commit/0ca07329776bbc734977f94579df9d91a154ba0e))
+* Ensure shaped lithophane frames maintain correct height by explicitly setting Z-levels during frame generation. ([95393a5](https://github.com/AtaCanYmc/lumina/commit/95393a55d75a3a7234ced6746b798ea9720902d2))
+* **release:** ensure consistent multi-line output for changelog in GitHub Actions ([b5896d7](https://github.com/AtaCanYmc/lumina/commit/b5896d79f451ca76203cfe6a10edd5923fb10ccc))
+* **security:** sanitize inputs, harden CLI error handling, and remediate GHA injection ([ea4dc18](https://github.com/AtaCanYmc/lumina/commit/ea4dc18e73da802ded82ae6d836e8bcd05953bca))
+* Update import paths for core services and enhance Z value handling in STL generation ([4580cac](https://github.com/AtaCanYmc/lumina/commit/4580cac634ede1816fa08556b013d86ae27e13a2))
+* Update Python version formatting in CI configuration files ([40d6d75](https://github.com/AtaCanYmc/lumina/commit/40d6d75e90dd908224c3dd59d6b5af2586b50de6))
+* update readme ([16d2376](https://github.com/AtaCanYmc/lumina/commit/16d237626f90224f37af58555bfb2903826a6d70))
+
+
+### Documentation
+
+* Add documentation for `lumina.generate_bitmap` function. ([7d4c5e2](https://github.com/AtaCanYmc/lumina/commit/7d4c5e2b9a7427e38f31c9ac0ae6d56aa929139d))
+* add repository governance, security policy, and github templates ([3ca3ca4](https://github.com/AtaCanYmc/lumina/commit/3ca3ca4032e9ffa509d44c2836c0bf08226ac307))
+* add spiral-&gt;lithophane example; add LICENSE; cli entrypoint ([b407e6c](https://github.com/AtaCanYmc/lumina/commit/b407e6c0e72fdc679666cde89a981ada74f77ce0))
+* eliminate AI slop, ground technical references, and refine governance ([ec52adb](https://github.com/AtaCanYmc/lumina/commit/ec52adbd933caab4640ac295cb30af75b98c9509))
+* remove Bitmap examples from README ([881d363](https://github.com/AtaCanYmc/lumina/commit/881d363d465fa1d3601c95e2b086f74ac912d4b0))
+* remove bitmap references from CLI and API docs ([2648643](https://github.com/AtaCanYmc/lumina/commit/264864301bdd321332d50c3799cf176d2e011be8))
+* remove bitmap_service reference from CONTRIBUTING ([2b03369](https://github.com/AtaCanYmc/lumina/commit/2b0336917a94d68289abc192e9d8c3d4421b11ba))
+* **roadmap:** add project roadmap for desktop application and feature milestones ([84f49e5](https://github.com/AtaCanYmc/lumina/commit/84f49e5f2da858ed967004a721654c14587769c9))
