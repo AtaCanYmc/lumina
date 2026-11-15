@@ -1,0 +1,30 @@
+name: Feature Request
+description: Propose a new feature, mesh shape, or algorithmic improvement
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check existing issues and pull requests to ensure the proposal is not already tracked.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Explain the problem or limitation you are trying to solve.
+      placeholder: Describe the current limitation or use case.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: Detailed explanation of how this should work or be implemented.
+      placeholder: Detailed description of the feature or proposed API/CLI interface.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or workarounds you considered.

@@ -107,7 +107,8 @@ lumina/
 ├── LICENSE                    # MIT license
 ├── Makefile                   # Build and development task automation
 ├── pyproject.toml             # Package specification and tool configuration
-└── README.md                  # Project overview and quick start
+├── README.md                  # Project overview and quick start
+└── SECURITY.md                # Vulnerability disclosure policy
 ```
 
 ## Commit Message Specification

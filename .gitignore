@@ -12,3 +12,4 @@ assets/stl/**
 locale_*
 .pytest_cache/
 dist/
+uv.lock

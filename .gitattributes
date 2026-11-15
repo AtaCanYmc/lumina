@@ -1,0 +1,31 @@
+# Auto detect text files and perform LF normalization on checkout
+* text=auto eol=lf
+
+# Explicit Python, shell, and task automation
+*.py text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+Makefile text eol=lf
+
+# Documentation and configs
+*.md text diff=markdown
+*.json text
+*.yml text
+*.yaml text
+*.toml text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.stl binary
+*.ico binary
+
+# Export exclusions for release archives
+.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.pre-commit-config.yaml export-ignore
+.editorconfig export-ignore
+tests export-ignore
