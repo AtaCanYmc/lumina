@@ -5,9 +5,11 @@ Lumina provides a command-line interface for generating lithophane 3D meshes and
 ## Table of Contents
 
 - [Invocation](#invocation)
+- [Interactive Wizard](#interactive-wizard)
 - [Commands](#commands)
   - [`lumina flat`](#lumina-flat)
   - [`lumina spiral`](#lumina-spiral)
+  - [`lumina interactive`](#interactive-wizard)
 - [Command Reference and Options](#command-reference-and-options)
   - [Options for `flat`](#options-for-flat)
   - [Options for `spiral`](#options-for-spiral)
@@ -21,11 +23,32 @@ After installing `lumina-tools`, execute via the console script:
 lumina --help
 ```
 
+Running `lumina` without subcommands in an interactive terminal prints the brand banner and available commands.
+
 Alternatively, run the module directly through Python:
 
 ```bash
 python -m lumina.cli --help
 ```
+
+---
+
+## Interactive Wizard
+
+For guided configuration without memorizing CLI flags, run the interactive wizard:
+
+```bash
+lumina interactive
+# or via shorthand alias:
+lumina wizard
+```
+
+The wizard prompts step-by-step for:
+1. Target generation mode (Flat Lithophane STL vs. Spiral Betty PNG).
+2. Input source image file.
+3. Dimensional parameters, resolution, shape, and frame settings.
+4. Output file path (with intelligent pre-filled defaults).
+5. Final confirmation prompt before processing.
 
 ---
 

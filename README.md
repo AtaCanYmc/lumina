@@ -146,6 +146,9 @@ The package provides the `lumina` console command as well as module execution vi
 ### CLI Commands
 
 ```bash
+# Launch the step-by-step interactive wizard
+lumina interactive
+
 # Generate a circular lithophane STL
 lumina flat photo.jpg --shape circle --width 120 --output circle_litho.stl
 
